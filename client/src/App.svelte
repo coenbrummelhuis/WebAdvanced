@@ -24,8 +24,7 @@
 </script>
 
 <main>
-  <img src={logo} alt="Svelte Logo" />
-  <Header active={currentRoute} />
+  <Header account="false"/>
   <svelte:component this={page} {params} />
 </main>
 
@@ -37,8 +36,8 @@
 
   main {
     text-align: center;
-    padding: 1em;
-    margin: 0 auto;
+    padding: 0;
+    margin: 0;
   }
 
   img {
