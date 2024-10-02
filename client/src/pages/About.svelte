@@ -27,7 +27,7 @@
     </code>
 </p>
 <p>
-    the <code>params = ctx;</code> part stores the routing context in the params variable.
+    the <code>params = ctx;</code> part data the routing context in the params variable.
 </p>
 <p>
     This variable is then passed into the component that is called for the page which is <code>About</code>

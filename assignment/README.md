@@ -31,7 +31,7 @@ For this assignment you will be designing, implementing and testing an auction s
 
 In short, people should be able to view items put up for aution on this site. only administrators can manage the items for auction. Meaning they can create update and delete them. If they would like to place a bid, users should register for an account and log in. Once logged in, they can place a bid.  
 
-The [functional design](./functional-design.md) describes how the site should work since this is generic for all auction sites. Exactly what is put up for auction is up to you. You should select a single type of items, such as bikes, computers, shoes, etc. The main point is that the selected item type can be filtered on at least three properties. For computers one might filter on type (laptop, desktop, server, etc.), Processor (Core i5, M-Series, Ryzen, etc.) and graphics card(NVIDIA, AMD, etc). A good idea on how this should work can be found on online stores such as [mediamarkt.nl](https://mediamarkt.nl) and [bol.com](https://bol.com) 
+The [functional design](./functional-design.md) describes how the site should work since this is generic for all auction sites. Exactly what is put up for auction is up to you. You should select a single type of items, such as bikes, computers, shoes, etc. The main point is that the selected item type can be filtered on at least three properties. For computers one might filter on type (laptop, desktop, server, etc.), Processor (Core i5, M-Series, Ryzen, etc.) and graphics card(NVIDIA, AMD, etc). A good idea on how this should work can be found on online data such as [mediamarkt.nl](https://mediamarkt.nl) and [bol.com](https://bol.com) 
 
 [back to top](./README.md#contents)
 
