@@ -11,6 +11,7 @@ import defaultBook from "../models/default-book.js";
  */
 export function addBook(req, res) {
     let newBook = req.body;
+    newBook["id"] = newBook["id"] || books.length;
 
     let book;
     try {
@@ -77,6 +78,7 @@ export function deleteBook(req, res) {
 }
 
 // Helper methods
+
 function checkBook(book) {
     let newBook;
     try {
@@ -84,12 +86,31 @@ function checkBook(book) {
     }catch (e) {
         throw e;
     }
-
+    if (!hasCorrectDate(newBook["launchDate"])) {
+        throw new Error("Launch date is in incorrect format!");
+    }
+    if (!hasCorrectDate(newBook["auction-date"])) {
+        throw new Error("Auction date is in incorrect format!");
+    }
+    if (isNaN(newBook["price"])) {
+        throw new Error("Price is not a number!");
+    }
     return newBook;
+}
+
+function hasCorrectDate(date) {
+    if (date.split("-").length !== 3) {
+        return false
+    }
+    if (date.split("-").some(datePart => isNaN(parseInt(datePart)))) {
+        return false;
+    }
+    return (date.split("-")[0] <= 31 && date.split("-")[1] <= 12)
 }
 
 function checkBookAttributes(book) {
     let newResource = Object.assign({}, defaultBook);
+    delete newResource["id"]
     let resource = book
     for (const attribute in resource) {
         if (resource[attribute] === undefined) {
@@ -104,9 +125,14 @@ function checkBookAttributes(book) {
 }
 
 function addBookToArray(book) {
-    throw ""
+    try {
+        books = [...books, book];
+    }catch (e) {
+        throw e;
+    }
+
 }
 
 function bookExists(book) {
-    return false;
+    return books.find(b => b["id"] === book["id"]) === undefined;
 }

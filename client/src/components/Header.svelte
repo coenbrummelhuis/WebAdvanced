@@ -22,14 +22,24 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        height: 8rem;
+        align-items: center;
         background-color: #555555;
         color: white;
+        height: 8rem;
+        padding: 0.5rem;
     }
     ul {
         display: flex;
         list-style: none;
         justify-content: space-evenly;
         flex-direction: column;
+    }
+    h1,p {
+        text-decoration: none;
+        font-weight: bolder;
+        font-size: larger;
+        padding: 0.5rem;
+        color: white;
+        align-items: flex-start;
     }
 </style>
