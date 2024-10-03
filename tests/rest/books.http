@@ -1,0 +1,128 @@
+### POST request to example server
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-12-2024",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 201, "Response status is not 200");
+        }
+    );
+%}
+
+### POST REQUEST to example server
+
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-13-2024",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 400, "Response status is not 400");
+            client.assert(response.body.message === "Launch date is in incorrect format!", "Launch date isn't checked")
+        }
+    );
+%}
+### POST REQUEST to example server
+
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-12-2024",
+  "language": "English",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 400, "Response status is not 400");
+            client.assert(response.body.message === "This book doesn't have an author!", "Existence of attributes isn't tested")
+        }
+    );
+%}
+### POST REQUEST to backend
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-12-2024",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": "wrong type",
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 400, "Response status is not 400");
+            client.assert(response.body.message === "The price of this book is of the wrong type!", "Type of attributes isn't tested")
+        }
+    );
+%}
+### GET REQUEST TO backend
+GET {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 200, "Response status is not 200");
+        }
+    );
+%}
+### GET REQUEST TO backend
+GET {{protocol}}{{host}}:{{port}}/books/fsfs
+
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 200, "Response status is not 200");
+        }
+    );
+%}
