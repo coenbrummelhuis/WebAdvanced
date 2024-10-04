@@ -1,7 +1,22 @@
-### POST request to example server
+### Retrieve a token that can be used for calls requiring authentication
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin@admin.com",
+  "password": "AdminWW123"
+}
+
+> {%
+    client.global.set("token", response.body.token);
+%}
+
+### POST request to server that's valid
 POST {{protocol}}{{host}}:{{port}}/books
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "test",
@@ -23,11 +38,117 @@ Accept: application/json
     );
 %}
 
-### POST REQUEST to example server
+### POST request to server without Authorization
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-12-2024",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 401, "Response status is not 401");
+        }
+    );
+%}
+
+### POST request to server with invalid token
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer jfslfslkjlsf
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-12-2024",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 401, "Response status is not 401");
+        }
+    );
+%}
+
+### Retrieve a token that can be used for calls requiring authentication
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "user@user.com",
+  "password": "UserWW123"
+}
+
+> {%
+    client.global.set("token", response.body.token);
+%}
+
+### POST request to server with user that has not enough permissions
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-12-2024",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 403, "Response status is not 403");
+        }
+    );
+%}
+
+### Retrieve a token that can be used for calls requiring authentication
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin@admin.com",
+  "password": "AdminWW123"
+}
+
+> {%
+    client.global.set("token", response.body.token);
+%}
+
+### POST REQUEST to server without invalid body (no launchdate)
 
 POST {{protocol}}{{host}}:{{port}}/books
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "test",
@@ -54,6 +175,7 @@ Accept: application/json
 POST {{protocol}}{{host}}:{{port}}/books
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "test",
@@ -78,6 +200,7 @@ Accept: application/json
 POST {{protocol}}{{host}}:{{port}}/books
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "test",

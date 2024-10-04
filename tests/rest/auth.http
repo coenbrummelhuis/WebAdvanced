@@ -6,13 +6,30 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "user",
-  "password": "pass"
+  "username": "user@user.com",
+  "password": "UserWW123"
 }
 
 > {%
-client.global.set("token", "m1jnH3l3L4ng3en5uperV31l!geT0ken");
+client.global.set("token", response.body.token);
 %}
+
+###
+### Create a new user
+###
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test@test.com",
+  "password": "randomshit"
+}
+
+> {%
+    client.global.set("token", "m1jnH3l3L4ng3en5uperV31l!geT0ken");
+%}
+
 
 
 ###

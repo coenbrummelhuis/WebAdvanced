@@ -1,12 +1,14 @@
 import express from "express";
 import {addBook, bidBook, deleteBook, getBookById, getBooks, updateBook} from "../controllers/book-controller.js";
+import isLoggedIn from "../middleware/is-logged-in.js";
+import isAdmin from "../middleware/is-admin.js";
 
 const router = express.Router();
 
 /**
  * CRUD: CREATE
  */
-router.post('/', (req, res) => {
+router.post('/', isLoggedIn, isAdmin, (req, res) => {
     addBook(req, res);
 });
 

@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
 import httpStatusCodes from "http-status-codes";
 import defaultUsers from "../resources/users.js"
 
@@ -7,19 +8,43 @@ const saltRounds = 10;
 
 export async function createUser(req, res) {
     const body = req.body;
-    if (!validEmail(body["email"])) {
-        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Email is not a valid email!"});
+    try {
+        if (!validEmail(body["username"])) {
+            res.status(httpStatusCodes.BAD_REQUEST).json({message: "Email is not a valid email!"});
+            return;
+        }
+    }catch (e) {
+        res.status(httpStatusCodes.CONFLICT).json({message: e});
         return;
     }
+
     if (!validPassword(body["password"])) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "Password is not a valid password!"});
         return;
     }
     try {
-        await addUser(body["email"], body["password"]);
+        await addUser(body["username"], body["password"]);
+        await loginUser(req, res)
     } catch (e) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: e.message});
     }
+}
+
+export async function loginUser(req, res) {
+    const username = req.body.username || undefined;
+    const password = req.body.password || undefined;
+    const user = users.find(u => u["username"] === username) || undefined;
+    if (user === undefined) {
+        res.status(httpStatusCodes.FORBIDDEN).json({message: "Username or password is not correct!"});
+        return;
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+        res.status(httpStatusCodes.FORBIDDEN).json({message: "Username or password is not correct!"});
+        return;
+    }
+    const token = jwt.sign({userId: user.id, roles: user.roles}, user.secret);
+    res.status(httpStatusCodes.OK).json({token: token});
 }
 
 // Helper methods
@@ -35,7 +60,6 @@ async function addUser(username, password) {
 }
 
 function validEmail(email) {
-    // @TODO: Check if it already exists
     if (email == null) {
         return false;
     }
@@ -47,6 +71,10 @@ function validEmail(email) {
     if (!provider.includes(".")) {
         return false;
     }
+    const user = users.find(u => u["username"] === email) || undefined;
+    if (user !== undefined) {
+        throw new Error("This email already exists!");
+    }
     return true;
 }
 
@@ -56,4 +84,8 @@ function validPassword(password) {
         return false;
     }
     return true;
+}
+
+export function getUserById(id) {
+    return users.find(u => u["id"] === id);
 }
