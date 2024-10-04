@@ -58,6 +58,7 @@ export function bidBook(req, res) {
         return;
     }
 
+
     if (bidder === undefined || bidder["username"] === undefined) {
         res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({message: "Something went wrong with your account!"});
     }
@@ -67,7 +68,16 @@ export function bidBook(req, res) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
         return;
     }
-    book.bidders = [...book.bidders, bidder.username];
+
+    if (price <= book.price) {
+        res.status(httpStatusCodes.CONFLICT).json({message: "A bid higher or equal to this bid has already been placed!"});
+        return;
+    }
+
+    book.bidders = [...book.bidders, {
+        "bidder": bidder.username,
+        "price": price
+    }];
     book.price = price;
     res.status(httpStatusCodes.OK).json(book);
 }

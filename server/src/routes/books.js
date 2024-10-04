@@ -10,7 +10,7 @@ router.post('/', (req, res) => {
     addBook(req, res);
 });
 
-router.post('/:id', (req, res) => {
+router.post('/:id/bids', (req, res) => {
     bidBook(req, res);
 });
 
