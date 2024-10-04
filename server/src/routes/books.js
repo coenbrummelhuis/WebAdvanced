@@ -1,5 +1,5 @@
 import express from "express";
-import {addBook, deleteBook, getBookById, getBooks, updateBook} from "../controllers/book-controller.js";
+import {addBook, bidBook, deleteBook, getBookById, getBooks, updateBook} from "../controllers/book-controller.js";
 
 const router = express.Router();
 
@@ -8,6 +8,10 @@ const router = express.Router();
  */
 router.post('/', (req, res) => {
     addBook(req, res);
+});
+
+router.post('/:id', (req, res) => {
+    bidBook(req, res);
 });
 
 /**

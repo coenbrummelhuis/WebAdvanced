@@ -36,6 +36,41 @@ export function addBook(req, res) {
     }
 }
 
+export function bidBook(req, res) {
+    const id = req.params.id || undefined;
+    const price = req.body.price;
+    const bidder = req.user || undefined;
+    if (id === undefined) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID can't be null"});
+        return;
+    }
+    if (isNaN(parseInt(id))) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID is not a number!"});
+        return;
+    }
+
+    if (price === undefined) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Price can't be null!"});
+        return;
+    }
+    if (isNaN(parseInt(price))) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Price is not a number!"});
+        return;
+    }
+
+    if (bidder === undefined || bidder["username"] === undefined) {
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({message: "Something went wrong with your account!"});
+    }
+
+    let book = books.find(b => b["id"] === parseInt(id)) || null;
+    if (book === null) {
+        res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
+        return;
+    }
+    book.bidders = [...book.bidders, bidder.username];
+    book.price = price;
+    res.status(httpStatusCodes.OK).json(book);
+}
 /**
  * CRUD: READ
  *
@@ -130,7 +165,33 @@ export function getBookById (req, res) {
  * @param res The response to the client
  */
 export function updateBook(req, res) {
+    const id = req.params.id || undefined;
+    const newBook = req.body;
 
+    if (id === undefined) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID can't be null"});
+        return;
+    }
+    if (isNaN(parseInt(id))) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID is not a number!"});
+        return;
+    }
+
+    let book;
+    try {
+        book = checkBook(newBook);
+    } catch (e) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: e.message});
+        return;
+    }
+
+    let oldBook = books.findIndex(b => b["id"] === parseInt(id)) || null;
+    if (oldBook === null) {
+        res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
+        return;
+    }
+    books[oldBook] = book;
+    res.status(httpStatusCodes.OK).json(book);
 }
 
 /**
@@ -141,7 +202,15 @@ export function updateBook(req, res) {
  * @param res The response to the client
  */
 export function deleteBook(req, res) {
-
+    const id = req.params.id || undefined;
+    const bookId = books.findIndex(b => b["id"] === parseInt(id)) || null;
+    if (bookId === null) {
+        res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
+        return;
+    }
+    const book = books[bookId];
+    books.splice(bookId, 1);
+    res.status(httpStatusCodes.OK).json(book);
 }
 
 // Helper methods
