@@ -31,4 +31,4 @@ export default [{
     "price": 4.50,
     "bidders": [],
     "auction-date": "28-10-2024"
-}]
+}];

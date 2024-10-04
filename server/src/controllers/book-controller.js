@@ -2,7 +2,7 @@ import httpStatusCodes from "http-status-codes";
 import defaultBooks from "../resources/books.js";
 import defaultBook from "../models/default-book.js";
 
-let books = defaultBooks
+let books = defaultBooks;
 
 
 /**
@@ -13,26 +13,26 @@ let books = defaultBooks
  * @param res The response to the client
  */
 export function addBook(req, res) {
-    let newBook = req.body;
+    const newBook = req.body;
     newBook["id"] = books.length;
 
     let book;
     try {
         book = checkBook(newBook);
     } catch (e) {
-        res.status(httpStatusCodes.BAD_REQUEST).json({message: e.message})
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: e.message});
         return;
     }
 
     if (bookExists(book)) {
-        res.status(httpStatusCodes.CONFLICT).json({message: `There already is an item with that id!`})
+        res.status(httpStatusCodes.CONFLICT).json({message: `There already is an item with that id!`});
         return;
     }
 
     try {
         res.status(httpStatusCodes.CREATED).json(addBookToArray(book));
     } catch (e) {
-        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({message: 'Something went wrong while adding the book to the array!'});
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({message: e.message});
     }
 }
 
@@ -44,8 +44,8 @@ export function addBook(req, res) {
  * @param res The response to the client
  */
 export function getBooks(req, res) {
-    let response = books;
-    let filter = {
+    const response = books;
+    const filter = {
         title: req.query.title || undefined,
         language: req.query.language || undefined,
         author: req.query.author || undefined,
@@ -75,7 +75,7 @@ export function getBooks(req, res) {
             }).filter(b => {
                 if (filter.priceFrom !== undefined) {
                     if (isNaN(filter.priceFrom)) {
-                        throw new Error("Upper price is not a number")
+                        throw new Error("Upper price is not a number");
                     }
                     return b.price >= filter.priceFrom;
                 } else {
@@ -84,7 +84,7 @@ export function getBooks(req, res) {
             }).filter(b => {
                 if (filter.priceTo !== undefined) {
                     if (isNaN(filter.priceTo)) {
-                        throw new Error("Upper price is not a number")
+                        throw new Error("Upper price is not a number");
                     }
                     return b.price <= filter.priceTo;
                 } else {
@@ -93,7 +93,7 @@ export function getBooks(req, res) {
             })
         );
     } catch (e) {
-        res.status(httpStatusCodes.BAD_REQUEST).json({message: e.message})
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: e.message});
     }
 }
 
@@ -104,8 +104,8 @@ export function getBooks(req, res) {
  * @param req The request of the server
  * @param res The response to the client
  */
-export function getBookById(req, res) {
-    let id = req.params.id || undefined;
+export function getBookById (req, res) {
+    const id = req.params.id || undefined;
     if (id === undefined) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID can't be null!"});
         return;
@@ -114,7 +114,7 @@ export function getBookById(req, res) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID is not a number!"});
         return;
     }
-    let book = books.find(b => b["id"] === parseInt(id)) || null;
+    const book = books.find(b => b["id"] === parseInt(id)) || null;
     if (book === null) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
         return;
@@ -167,22 +167,22 @@ function checkBook(book) {
 
 function hasCorrectDate(date) {
     if (date.split("-").length !== 3) {
-        return false
+        return false;
     }
     if (date.split("-").some(datePart => isNaN(parseInt(datePart)))) {
         return false;
     }
-    return (date.split("-")[0] <= 31 && date.split("-")[1] <= 12)
+    return (date.split("-")[0] <= 31 && date.split("-")[1] <= 12);
 }
 
 function checkBookAttributes(book) {
-    let newResource = Object.assign({}, defaultBook);
-    let resource = book
+    const newResource = Object.assign({}, defaultBook);
+    const resource = book;
     for (const attribute in newResource) {
         if (resource[attribute] === undefined) {
-            throw new Error(`This book doesn't have an ${attribute}!`)
+            throw new Error(`This book doesn't have an ${attribute}!`);
         } else if (typeof newResource[attribute] !== typeof resource[attribute]) {
-            throw new Error(`The ${attribute} of this book is of the wrong type!`)
+            throw new Error(`The ${attribute} of this book is of the wrong type!`);
         } else {
             newResource[attribute] = resource[attribute];
         }
@@ -191,15 +191,11 @@ function checkBookAttributes(book) {
 }
 
 function addBookToArray(book) {
-    try {
-        books = [...books, book];
-    } catch (e) {
-        throw e;
-    }
+    books = [...books, book];
     return book;
 
 }
 
 function bookExists(book) {
-    return books.some((b) => b["id"] === book["id"])
+    return books.some((b) => b["id"] === book["id"]);
 }

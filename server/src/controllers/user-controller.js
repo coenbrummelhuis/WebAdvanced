@@ -11,14 +11,14 @@ function validEmail(email) {
         return false;
     }
     const first = email.split("@")[0];
-    const provider = email.split("@")[1]
+    const provider = email.split("@")[1];
     if(!provider.includes(".")) {
         return false;
     }
     return true;
 }
 function validPassword(password) {
-    if (password == null) {
+    if (password === null) {
         return false;
     }
     return true;
