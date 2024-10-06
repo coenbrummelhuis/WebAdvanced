@@ -1,13 +1,11 @@
-@username = "user@user.com"
-@password = "UserWW123"
 ### Login to a valid user
 POST {{protocol}}{{host}}:{{port}}/auth
 Content-Type: application/json
 Accept: application/json
 
 {
-  "username": {{username}},
-  "password": {{password}}
+  "username": "user@user.com",
+  "password": "UserWW123"
 }
 
 > {%
@@ -19,7 +17,6 @@ Accept: application/json
 %}
 
 ### User can access restricted content
-### Test auth of newly created user!
 # MUST HAVE RUN TEST ABOVE!
 POST {{protocol}}{{host}}:{{port}}/books/0/bids
 Accept: application/json
@@ -33,14 +30,154 @@ Authorization: Bearer {{token}}
 > {%
     client.test("Succesfully got permission to bid", () => {
         client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body.bidders.some(b => b.bidder === "test@test.com"));
+        client.assert(response.body.bidders.some(b => b.bidder === "user@user.com"));
     })
 %}
 
-###
-### Invalidate the token
-###
+#### Invalidate the token
 DELETE {{protocol}}{{host}}:{{port}}/auth
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{token}}
+
+### User can't access restricted content
+# MUST HAVE RUN TEST ABOVE!
+POST {{protocol}}{{host}}:{{port}}/books/0/bids
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "price": 160
+}
+
+> {%
+    client.test("Successfully checks if token is valid!", () => {
+        client.assert(response.status === 401, "Response status is not 401");
+    })
+%}
+
+### Login to a invalid user (wrong username)
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "jkljflsj@user.com",
+  "password": "UserWW123"
+}
+
+> {%
+    client.test("Login is working successfully", () => {
+        client.assert(response.status === 403, "Response status is not 401");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+        client.assert(response.body.message === "Username or password is not correct!");
+    })
+%}
+
+### Login to a invalid user (wrong password)
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "user@user.com",
+  "password": "fjslflkjls"
+}
+
+> {%
+    client.test("Login is working successfully", () => {
+        client.assert(response.status === 403, "Response status is not 401");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+        client.assert(response.body.message === "Username or password is not correct!");
+    })
+%}
+
+### Login to a invalid user (no body)
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Login is working successfully", () => {
+        client.assert(response.status === 403, "Response status is not 401");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+        client.assert(response.body.message === "Username or password is not correct!");
+    })
+%}
+
+### Login to a valid user
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "user@user.com",
+  "password": "UserWW123"
+}
+
+> {%
+    client.test("Login is working successfully", () => {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.token !== undefined, "Response doesn't contain a token!")
+    })
+    client.global.set("token", response.body.token);
+%}
+
+### User can't access admin restricted content
+# MUST HAVE RUN TEST ABOVE!
+POST {{protocol}}{{host}}:{{port}}/books
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+> {%
+    client.test("Succesfully checked role", () => {
+        client.assert(response.status === 403, "Response status is not 403");
+    })
+%}
+
+### Login to a valid admin
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin@admin.com",
+  "password": "AdminWW123"
+}
+
+> {%
+    client.test("Login is working successfully", () => {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.token !== undefined, "Response doesn't contain a token!")
+    })
+    client.global.set("token", response.body.token);
+%}
+
+### Admin can access admin restricted content
+# MUST HAVE RUN TEST ABOVE!
+POST {{protocol}}{{host}}:{{port}}/books
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "24-12-2024",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "24-11-2024"
+}
+
+
+> {%
+    client.test("Succesfully checked role", () => {
+        client.assert(response.status === 201, "Response status is not 201");
+    })
+%}

@@ -1,6 +1,5 @@
 ### Retrieve a token that can be used for calls requiring authentication
-
-OST {{protocol}}{{host}}:{{port}}/auth
+POST {{protocol}}{{host}}:{{port}}/auth
 Content-Type: application/json
 Accept: application/json
 
@@ -171,6 +170,7 @@ Authorization: Bearer {{token}}
         }
     );
 %}
+
 ### POST REQUEST to example server
 
 POST {{protocol}}{{host}}:{{port}}/books
@@ -197,6 +197,7 @@ Authorization: Bearer {{token}}
         }
     );
 %}
+
 ### POST REQUEST to backend
 POST {{protocol}}{{host}}:{{port}}/books
 Content-Type: application/json
@@ -223,6 +224,7 @@ Authorization: Bearer {{token}}
         }
     );
 %}
+
 ### GET REQUEST TO backend
 GET {{protocol}}{{host}}:{{port}}/books
 Content-Type: application/json
@@ -236,6 +238,7 @@ Accept: application/json
         }
     );
 %}
+
 ### GET REQUEST TO backend
 GET {{protocol}}{{host}}:{{port}}/books/fsfs
 
