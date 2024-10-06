@@ -2,17 +2,19 @@ import express from "express";
 import {addBook, bidBook, deleteBook, getBookById, getBooks, updateBook} from "../controllers/book-controller.js";
 import isLoggedIn from "../middleware/is-logged-in.js";
 import isAdmin from "../middleware/is-admin.js";
+import checkContentTypeHeader from "../middleware/check-content-type-header.js";
+import isBidder from "../middleware/is-bidder.js";
 
 const router = express.Router();
 
 /**
  * CRUD: CREATE
  */
-router.post('/', isLoggedIn, isAdmin, (req, res) => {
+router.post('/', checkContentTypeHeader, isLoggedIn, isAdmin, (req, res) => {
     addBook(req, res);
 });
 
-router.post('/:id/bids', (req, res) => {
+router.post('/:id/bids', checkContentTypeHeader, isLoggedIn, isBidder, (req, res) => {
     bidBook(req, res);
 });
 
@@ -30,14 +32,14 @@ router.get('/:id', (req, res) => {
 /**
  * CRUD: UPDATE
  */
-router.put('/:id', (req, res) => {
+router.put('/:id', checkContentTypeHeader, isLoggedIn, isAdmin, (req, res) => {
     updateBook(req, res);
 });
 
 /**
  * CRUD: DELETE
  */
-router.delete('/id', (req, res) => {
+router.delete('/id', isLoggedIn, isAdmin, (req, res) => {
     deleteBook(req, res);
 });
 

@@ -2,14 +2,14 @@
 
 ## Contents
 
-- [Introduction](./README.md#introduction)
-- [Using the RESTclient](./README.md#using-the-rest-client)
-  - [Structure](./README.md#Structure)
-  - [Using the results](./README.md#using-the-results)
-- [Client object](./README.md#client-object)
-- [Response object](./README.md#response-object)
-- [Environments](./README.md#environments)
-- [Links and references](./README.md#links-and-references)
+- [Introduction](README.mdntroduction)
+- [Using the RESTclient](README.mdsing-the-rest-client)
+  - [Structure](README.mdtructure)
+  - [Using the results](README.mdsing-the-results)
+- [Client object](README.mdlient-object)
+- [Response object](README.mdesponse-object)
+- [Environments](README.mdnvironments)
+- [Links and references](README.mdinks-and-references)
 
  
 ## Introduction
@@ -66,7 +66,7 @@ On the top of the editor another toolbar is visible.
 ![Top bar](documentation/images/top-bar.png)
 
 The double "play" buttons can be used to run all requests in the file from top to bottom. This is also where an 
-environment can be selected. Read more about environments [here](./README.md#Environments)
+environment can be selected. Read more about environments [here](README.mdnvironments)
 
 ### Using the results
 

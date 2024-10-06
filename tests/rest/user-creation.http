@@ -1,0 +1,216 @@
+// BEFORE RUNNING THESE TESTS, RESTART THE SERVER
+### Create a valid new user
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test@test.com",
+  "password": "TestWW123"
+}
+
+> {%
+    client.test("Succesfully created a new user!", () => {
+        client.assert(response.status === 201, "Response status is not 201");
+        client.assert(response.body !== undefined, "Response body is empty");
+        client.assert(response.body.token !== undefined, "Response doesn't contain a token!");
+    });
+    client.global.set("token", response.body.token);
+%}
+
+### Test auth of newly created user!
+# MUST HAVE RUN TEST ABOVE!
+POST {{protocol}}{{host}}:{{port}}/books/0/bids
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "price": 160
+}
+
+> {%
+client.test("Succesfully got permission to bid", () => {
+    client.assert(response.status === 200, "Response status is not 200");
+    client.assert(response.body.bidders.some(b => b.bidder === "test@test.com"));
+})
+ %}
+
+### Create a user that already exists
+# MUST HAVE RUN FIRST TEST!
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test@test.com",
+  "password": "TestWW123"
+}
+
+> {%
+    client.test("Succesfully created a new user!", () => {
+        client.assert(response.status === 409, "Response status is not 409");
+        client.assert(response.body !== undefined, "Response body is empty");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+        client.assert(response.body.message === "There already is an account with that email!", "Response doesn't contain the correct error message!")
+    });
+%}
+
+### Create a user with invalid email
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test.test.com",
+  "password": "TestWW123"
+}
+
+> {%
+    client.test("Successfully tested the email of the user!", () => {
+        client.assert(response.status === 400, "Response status is not 400");
+        client.assert(response.body !== undefined, "Response body is empty");
+        client.assert(response.body.message !== undefined, "Response doesn't contain a token!");
+        client.assert(response.body.message === "Email is not a valid email!", "Response doesn't contain the correct error message!")
+    });
+%}
+
+### Create a user with invalid password (no numbers)
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test2@test.com",
+  "password": "TestWWfjslkjfl"
+}
+
+> {%
+    client.test("Successfully tested for numbers", () => {
+        client.assert(response.status === 400, "Response status is not 400");
+        client.assert(response.body !== undefined, "Response body is empty");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+        client.assert(response.body.message === "Password should have at least one number!", "Response doesn't contain the correct error message!")
+    });
+%}
+
+### Create a user with invalid password (no capital)
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test2@test.com",
+  "password": "testww123"
+}
+
+> {%
+    client.test("Successfully tested for numbers", () => {
+        client.assert(response.status === 400, "Response status is not 400");
+        client.assert(response.body !== undefined, "Response body is empty");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+        client.assert(response.body.message === "Password should have at least one uppercase letter!", "Response doesn't contain the correct error message!")
+    });
+%}
+
+### Create a user with invalid password (no lowercase)
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test2@test.com",
+  "password": "TESTWW123"
+}
+
+> {%
+    client.test("Successfully tested for numbers", () => {
+        client.assert(response.status === 400, "Response status is not 400");
+        client.assert(response.body !== undefined, "Response body is empty");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+        client.assert(response.body.message === "Password should have at least one lowercase letter!", "Response doesn't contain the correct error message!")
+    });
+%}
+
+### Create a user without body
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/json
+
+
+> {%
+    client.test("Succesfully tested the existence of a body", () => {
+        client.assert(response.status === 400, "Response status is not 400");
+        client.assert(response.body !== undefined, "Response body is empty");
+        client.assert(response.body.message !== undefined, "Response doesn't contain an error message!");
+    });
+%}
+
+### Create a user without content-type header
+POST {{protocol}}{{host}}:{{port}}/users
+Accept: application/json
+
+{
+  "username": "test@test.com",
+  "password": "TestWW123"
+}
+
+> {%
+    client.test("Successfully checked content-type header!", () => {
+        client.assert(response.status === 415, "Response status is not 415");
+
+    })
+%}
+
+### Create a user with invalid content-type header
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/pdf
+Accept: application/json
+
+{
+  "username": "test@test.com",
+  "password": "TestWW123"
+}
+
+> {%
+    client.test("Successfully checked content-type header!", () => {
+        client.assert(response.status === 415, "Response status is not 415");
+
+    })
+%}
+
+### Create a user without accept header
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+
+{
+  "username": "test@test.com",
+  "password": "TestWW123"
+}
+
+> {%
+    client.test("Successfully checked accept header!", () => {
+        client.assert(response.status === 406, "Response status is not 406");
+
+    })
+%}
+
+### Create a user with invalid accept header
+POST {{protocol}}{{host}}:{{port}}/users
+Content-Type: application/json
+Accept: application/pdf
+
+{
+  "username": "test@test.com",
+  "password": "TestWW123"
+}
+
+> {%
+    client.test("Successfully checked accept header!", () => {
+        client.assert(response.status === 406, "Response status is not 406");
+
+    })
+%}
+
+
+

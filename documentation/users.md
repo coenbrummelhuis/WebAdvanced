@@ -5,7 +5,7 @@ regular user.
 
 | Username          | Password   | Account type |
 |-------------------|------------|--------------|
-| `admin@admin.com` | AdminWW123 |              |
-| `user@user.com`   | UserWW123  |              |
+| `admin@admin.com` | AdminWW123 | admin        |
+| `user@user.com`   | UserWW123  | bidder       |
 
 

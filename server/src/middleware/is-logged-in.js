@@ -38,7 +38,7 @@ export default function (req, res, next) {
 
     }catch (e) {
         console.log(e.message);
-        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({message: "Something went wrong while checking the authorization headers!"});
+        res.status(httpStatusCodes.UNAUTHORIZED).json({message: "You are not authorized!"});
         return;
     }
     next();

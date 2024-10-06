@@ -79,7 +79,8 @@ export function bidBook(req, res) {
         "price": price
     }];
     book.price = price;
-    res.status(httpStatusCodes.OK).json(book);
+    const sendBook = Object.assign({}, book);
+    res.status(httpStatusCodes.OK).json(sendBook);
 }
 /**
  * CRUD: READ

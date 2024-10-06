@@ -1,36 +1,41 @@
-###
-### Retrieve a token that can be used for calls requiring authentication
-###
+@username = "user@user.com"
+@password = "UserWW123"
+### Login to a valid user
 POST {{protocol}}{{host}}:{{port}}/auth
 Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "user@user.com",
-  "password": "UserWW123"
+  "username": {{username}},
+  "password": {{password}}
 }
 
 > {%
-client.global.set("token", response.body.token);
+    client.test("Login is working successfully", () => {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.token !== undefined, "Response doesn't contain a token!")
+    })
+    client.global.set("token", response.body.token);
 %}
 
-###
-### Create a new user
-###
-POST {{protocol}}{{host}}:{{port}}/users
-Content-Type: application/json
+### User can access restricted content
+### Test auth of newly created user!
+# MUST HAVE RUN TEST ABOVE!
+POST {{protocol}}{{host}}:{{port}}/books/0/bids
 Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-  "username": "test@test.com",
-  "password": "randomshit"
+  "price": 160
 }
 
 > {%
-    client.global.set("token", "m1jnH3l3L4ng3en5uperV31l!geT0ken");
+    client.test("Succesfully got permission to bid", () => {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.bidders.some(b => b.bidder === "test@test.com"));
+    })
 %}
-
-
 
 ###
 ### Invalidate the token
