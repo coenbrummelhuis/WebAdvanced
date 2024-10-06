@@ -1,10 +1,56 @@
 <script>
-    import { onMount } from 'svelte';
     import user from "../stores/user.js";
-    const filter = () => {
-        console.log("filter")
+    import TextBox from "../components/TextBox.svelte";
+    import Button from "../components/Button.svelte";
+    let email;
+    let password;
+    let notice = true;
+    let onClick = () => {
+        notice = !notice
+        console.log(email);
+        console.log(password)
     }
     export let params;
 </script>
-<input type="text" class="search" id="search" on:keyup={filter}
-       placeholder="Search...">
+<section>
+    <h1>Log in</h1>
+    <TextBox type="E-mail" bind:value={email}></TextBox>
+    <TextBox type="Password" bind:value={password}></TextBox>
+    <p class:invisible={notice}>Email or password is incorrect!</p>
+    <Button text="Login" click={onClick}></Button>
+    <a href="/register">Don't have an account? Register </a>
+</section>
+<style>
+    h1 {
+        font-size: xx-large;
+    }
+    section {
+        display: inline-flex;
+        list-style: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 4rem;
+        padding: 2rem;
+        background-color: #D9D9D9;
+        border-radius: 2em;
+        width: 25%;
+    }
+    p {
+        margin: 0;
+        color: darkred;
+        font-size: small;
+    }
+    .invisible {
+        visibility: hidden;
+    }
+
+    a {
+        text-decoration: none;
+        padding: 0.5rem;
+        margin: 0;
+        color: black;
+        font-size: smaller;
+        text-align: start;
+    }
+</style>

@@ -1,22 +1,27 @@
 <script>
     import user from "../stores/user.js";
 
+    const src = "./src/assets/book_white.png"
+
     export let active
 </script>
 <nav>
+    <a href="/">
     <section>
-        <a href="/">
+        <img {src} alt="Logo">
+        <section>
             <ul>
                 <li><h1 id="title">BidBook</h1></li>
                 <li><p id="subtitle">The site to find used books!</p></li>
             </ul>
-        </a>
+        </section>
+
     </section>
+    </a>
     <aside>
         {#if $user.token === undefined}
-            {#if active !== "/login"}
-                <a href="/login">Login</a>
-            {/if}
+            <a class:active={active === "/login"} href="/login">Login</a>
+            <a class:active={active === "/register"} href="/register">Register</a>
         {:else }
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 1200 1200">
                 <path fill="currentColor"
@@ -37,12 +42,20 @@
         height: 8rem;
     }
 
+    section {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+    }
+
     aside {
         padding-right: 5rem;
     }
 
     ul {
         display: flex;
+        padding: 1rem;
         list-style: none;
         justify-content: space-evenly;
         flex-direction: column;
@@ -54,5 +67,16 @@
         margin: 0;
         color: white;
         text-align: start;
+    }
+
+    .active {
+        font-weight: bolder;
+    }
+
+    img {
+        min-height: 20px;
+        max-height: 20vh;
+        height: 4rem;
+        padding: 0.5rem;
     }
 </style>
