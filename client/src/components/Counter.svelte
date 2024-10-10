@@ -1,4 +1,11 @@
 <script>
+  import {onMount} from "svelte";
+  import userStore from "../stores/user.js";
+  let user = $userStore;
+
+  onMount(() => {
+    console.log(user)
+  })
   let count = 0
   const increment = () => {
     count += 1

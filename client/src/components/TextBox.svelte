@@ -10,7 +10,7 @@
         padding: 1em 2em;
         border-radius: 1em;
         border: 2px solid;
-        margin: 0.5rem;
+        margin: 0.2rem;
         width: max-content;
     }
 </style>

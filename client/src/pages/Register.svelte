@@ -1,18 +1,24 @@
 <script>
     import TextBox from "../components/TextBox.svelte";
     import Button from "../components/Button.svelte";
+    import userStore from "../stores/user.js";
+    import {registerUser} from "../js/user-controller.js";
+    import page from "page";
+    let user = $userStore;
     let email;
     let password;
     let repeatedPassword;
-    let notice = true;
-    let onClick = () => {
-        notice = !notice
-        console.log(email);
-        console.log(password)
-        console.log(repeatedPassword)
-    }
-    const filter = () => {
-        console.log("filter")
+    let notice = false;
+    let noticeMessage = "";
+    const register = async () => {
+        notice = false;
+        try {
+            await registerUser(email, password, repeatedPassword, user);
+            page.redirect("/")
+        } catch (e) {
+            notice = true;
+            noticeMessage = e.message;
+        }
     }
     export let params;
 </script>
@@ -22,9 +28,9 @@
         <TextBox type="E-mail" bind:value={email}></TextBox>
         <TextBox type="Password" bind:value={password}></TextBox>
         <TextBox type="Repeat password" bind:value={repeatedPassword}></TextBox>
-        <p class:invisible={notice}>Email or password is incorrect!</p>
-        <Button text="Register" click={onClick}></Button>
-        <a href="/register">Already have an account? Log in</a>
+        <p class:invisible={!notice}>{noticeMessage}</p>
+        <Button text="Register" click={register}></Button>
+        <a href="/login">Already have an account? Log in</a>
     </article>
     <aside>
         <h1>BidBook</h1>
@@ -57,9 +63,10 @@
         justify-content: center;
         align-items: center;
         flex-direction: row-reverse;
-        margin: 2rem;
+        margin: 1rem;
     }
     h1 {
+        margin: 1rem;
         font-size: xx-large;
     }
     ul {

@@ -6,6 +6,7 @@
   import Header from "./components/Header.svelte";
   import Login from "./pages/Login.svelte";
   import Register from "./pages/Register.svelte";
+  import PageNotFound from "./pages/PageNotFound.svelte";
 
   let page;
   let params;
@@ -27,6 +28,11 @@
   })
   router('/register', (ctx) => {
     page = Register;
+    currentRoute = ctx.pathname;
+    params = ctx;
+  })
+  router('/*', (ctx) => {
+    page = PageNotFound;
     currentRoute = ctx.pathname;
     params = ctx;
   })

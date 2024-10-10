@@ -6,7 +6,7 @@ let books = defaultBooks;
 
 
 /**
- * CRUD: READ
+ * CRUD: CREATE
  *
  * Add a new book
  * @param req The request of the server
@@ -166,6 +166,32 @@ export function getBookById (req, res) {
         return;
     }
     res.status(httpStatusCodes.OK).json(book);
+}
+
+/**
+ * CRUD: READ
+ *
+ * Get the bids by the user
+ * @param req The request of the server
+ * @param res The response of the server
+ */
+export function getBidsByUser(req, res) {
+    const id = req.params.id || undefined;
+    const userId = req.user.id || undefined
+    if(id === undefined || userId === undefined) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Please add an id to the request!"})
+    }
+    if (id !== userId) {
+        res.status(httpStatusCodes.FORBIDDEN).json({message: "You are not authorized to view another persons bids!"});
+        return;
+    }
+    let bids = [];
+    for (let book in books) {
+        if (book.bidders.includes(b => b.username === id)) {
+            bids.push(book);
+        }
+    }
+    res.status(httpStatusCodes.OK).json({message: bids});
 }
 
 /**

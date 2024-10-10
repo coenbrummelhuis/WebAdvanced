@@ -1,7 +1,12 @@
 <script>
-    import Counter from '../components/Counter.svelte';
-
+    import AuctionList from "../components/AuctionList.svelte";
+    import Filters from "../components/Filters.svelte";
+    let filters = [];
     export let params;
 </script>
-
-<Counter />
+<aside>
+    <Filters bind:filters = {filters}></Filters>
+</aside>
+<section>
+    <AuctionList type="ul" filters=filters></AuctionList>
+</section>

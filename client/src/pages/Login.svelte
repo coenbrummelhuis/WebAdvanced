@@ -1,14 +1,23 @@
 <script>
-    import user from "../stores/user.js";
+    import userStore from "../stores/user.js";
+    let user = $userStore;
     import TextBox from "../components/TextBox.svelte";
     import Button from "../components/Button.svelte";
+    import { loginUser} from "../js/user-controller.js";
+    import page from "page";
     let email;
     let password;
-    let notice = true;
-    let onClick = () => {
-        notice = !notice
-        console.log(email);
-        console.log(password)
+    let notice = false;
+    let noticeMessage = "";
+    let login = async () => {
+        notice = false;
+        try {
+            await loginUser(email, password, user);
+            page.redirect("/")
+        } catch (e) {
+            notice = true;
+            noticeMessage = e.message;
+        }
     }
     export let params;
 </script>
@@ -16,12 +25,13 @@
     <h1>Log in</h1>
     <TextBox type="E-mail" bind:value={email}></TextBox>
     <TextBox type="Password" bind:value={password}></TextBox>
-    <p class:invisible={notice}>Email or password is incorrect!</p>
-    <Button text="Login" click={onClick}></Button>
+    <p class:invisible={!notice}>{noticeMessage}</p>
+    <Button text="Login" click={async () => await login()}></Button>
     <a href="/register">Don't have an account? Register </a>
 </section>
 <style>
     h1 {
+        margin: 1rem;
         font-size: xx-large;
     }
     section {
@@ -30,7 +40,7 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        margin: 4rem;
+        margin: 3rem;
         padding: 2rem;
         background-color: #D9D9D9;
         border-radius: 2em;

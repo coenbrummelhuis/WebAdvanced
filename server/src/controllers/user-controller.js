@@ -29,6 +29,7 @@ export async function createUser(req, res) {
     }
 }
 
+
 export async function loginUser(req, res) {
     const username = req.body.username || undefined;
     const password = req.body.password || undefined;
