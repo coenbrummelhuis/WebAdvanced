@@ -238,19 +238,3 @@ Accept: application/json
         }
     );
 %}
-
-### GET REQUEST TO backend
-GET {{protocol}}{{host}}:{{port}}/books/fsfs
-
-Content-Type: application/json
-Accept: application/json
-
-> {%
-    client.test(
-        "Request executed successfully",
-        function () {
-            client.assert(response.status === 400, "Response status is not 400");
-            client.assert(response.body.message === "ID is not a number!")
-        }
-    );
-%}

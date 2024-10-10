@@ -31,4 +31,15 @@ export default [{
     "price": 4.50,
     "bidders": [],
     "auction-date": "28-10-2024"
+},{
+    "id": 3,
+    "title": "Harry Potter and the test",
+    "description": "'There is a plot, Harry Potter. A plot to make most terrible things happen at Hogwarts School of Witchcraft and Wizardry this year.'\n" + "\n" + "Harry Potter's summer has included the worst birthday ever, doomy warnings from a house-elf called Dobby, and rescue from the Dursleys by his friend Ron Weasley in a magical flying car! Back at Hogwarts School of Witchcraft and Wizardry for his second year, Harry hears strange whispers echo through empty corridors - and then the attacks start. Students are found as though turned to stone... Dobby's sinister predictions seem to be coming true.\n" + "\n" + "Having become classics of our time, the Harry Potter eBooks never fail to bring comfort and escapism. With their message of hope, belonging and the enduring power of truth and love, the story of the Boy Who Lived continues to delight generations of new readers.\n",
+    "launchDate": "02-06-1998",
+    "language": "English",
+    "author": "J.K. Rowling",
+
+    "price": 4.50,
+    "bidders": [],
+    "auction-date": "10-10-2024 21:03"
 }];

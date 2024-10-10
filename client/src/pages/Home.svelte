@@ -5,8 +5,8 @@
     export let params;
 </script>
 <aside>
-    <Filters bind:filters = {filters}></Filters>
+    <Filters bind:filters={filters}></Filters>
 </aside>
 <section>
-    <AuctionList type="ul" filters=filters></AuctionList>
+    <AuctionList bind:filters={filters}></AuctionList>
 </section>
