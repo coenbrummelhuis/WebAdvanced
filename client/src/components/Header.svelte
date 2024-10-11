@@ -7,7 +7,7 @@
 </script>
 <nav>
     <a href="/">
-    <section>
+    <section class="titles">
         <img {src} alt="Logo">
         <section>
             <ul>
@@ -81,5 +81,17 @@
         max-height: 20vh;
         height: 4rem;
         padding: 0.5rem;
+    }
+
+    @media screen and (max-width: 500px){
+        .titles {
+            display: none;
+        }
+        nav{
+            justify-content: center;
+        }
+        aside {
+            padding: 0;
+        }
     }
 </style>

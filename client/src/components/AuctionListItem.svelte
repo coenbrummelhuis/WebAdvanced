@@ -2,15 +2,14 @@
     import {onMount} from "svelte";
 
     onMount(() => {
-        console.log(item)
     });
-    const getTime = (endDate, startDate) => {
-        const seconds = Math.floor((endDate - startDate) / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-        console.log(hours)
-        if (isNaN(seconds)) {
+    const getTime = (today, endDate) => {
+        const diff = endDate - today;
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        if (diff < 0 || isNaN(diff)) {
             return "Auction ended!";
         }
         if (days > 0) {
@@ -37,9 +36,14 @@
 </li>
 <style>
     li {
-        flex: 1 0 140px;
+        display: flex;
+        flex: 1 0 25%;
         background-color: #D9D9D9;
-        padding: 0.5rem;
+        padding: 1rem;
+        margin: 1rem;
+        width: max(200px, 30%);
         border-radius: 2em;
+        justify-content: center;
+        text-align: center;
     }
 </style>

@@ -3,34 +3,14 @@
 
     export let filters;
 
-    const getAuctionItems = async () => {
-        let filterURL = "";
-        for (const filterQuery in filters) {
-            filterURL += "&" + filterQuery["key"] + "=" + filterQuery["value"];
-        }
-        const response = await fetch("http://localhost:3000/books?" + filterURL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        });
-
-        const data = await response.json();
-        const status = response.status;
-        if (status !== 200) {
-            throw new Error(data.message);
-        }else {
-            return data;
-        }
-    }
+    export let items;
 </script>
-{#await getAuctionItems()}
+{#await items}
     <h1>Waiting for response from backend</h1>
 {:then list}
     <ul>
         {#each list as auctionItem}
-            <AuctionListItem item={auctionItem}></AuctionListItem>
+            <AuctionListItem bind:item={auctionItem}></AuctionListItem>
         {/each}
     </ul>
 
@@ -40,8 +20,9 @@
 
 <style>
     ul {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 30%));
+        justify-content: space-evenly;
         gap: 2rem;
         list-style: none;
         padding: 0;

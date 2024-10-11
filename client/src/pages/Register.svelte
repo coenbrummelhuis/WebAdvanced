@@ -25,9 +25,9 @@
 <section>
     <article>
         <h1>Register</h1>
-        <TextBox type="E-mail" bind:value={email}></TextBox>
-        <TextBox type="Password" bind:value={password}></TextBox>
-        <TextBox type="Repeat password" bind:value={repeatedPassword}></TextBox>
+        <TextBox type="E-mail" bind:value={email} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
+        <TextBox type="Password" bind:value={password} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
+        <TextBox type="Repeat password" bind:value={repeatedPassword} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
         <p class:invisible={!notice}>{noticeMessage}</p>
         <Button text="Register" click={register}></Button>
         <a href="/login">Already have an account? Log in</a>
@@ -52,7 +52,7 @@
         padding: 2rem;
         background-color: #D9D9D9;
         border-radius: 2em;
-        min-width: 25%;
+        min-width: max(25%, 300px);
     }
     aside {
         margin-right: 6rem;
@@ -96,5 +96,11 @@
     }
     .invisible {
         visibility: hidden;
+    }
+    @media screen and (max-width: 800px) {
+        aside {
+            display: none;
+        }
+
     }
 </style>

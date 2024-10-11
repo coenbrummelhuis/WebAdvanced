@@ -2,7 +2,7 @@
     export let params;
 </script>
 <section>
-    <a href="/  ">
+    <a href="/">
         <h1>Page: {params.pathname} not found!</h1>
         <h2>Please navigate to home!</h2>
     </a>

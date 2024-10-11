@@ -23,8 +23,8 @@
 </script>
 <section>
     <h1>Log in</h1>
-    <TextBox type="E-mail" bind:value={email}></TextBox>
-    <TextBox type="Password" bind:value={password}></TextBox>
+    <TextBox type="E-mail" bind:value={email} onKeyUp={async (e) => {(e.key === "Enter") ? await login() : ""}}></TextBox>
+    <TextBox type="Password" bind:value={password} onKeyUp={async (e) => {(e.key === "Enter") ? await login() : ""}}></TextBox>
     <p class:invisible={!notice}>{noticeMessage}</p>
     <Button text="Login" click={async () => await login()}></Button>
     <a href="/register">Don't have an account? Register </a>
@@ -44,7 +44,7 @@
         padding: 2rem;
         background-color: #D9D9D9;
         border-radius: 2em;
-        width: 25%;
+        width: max(25%, 300px);
     }
     p {
         margin: 0;

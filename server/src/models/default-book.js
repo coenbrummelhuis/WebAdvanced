@@ -12,5 +12,5 @@ export default {
 
     "price": 70.20,
     "bidders": [],
-    "auction-date": "17-04-2024"
+    "auction-date": new Date("2024-10-11T11:25:00")
 };
