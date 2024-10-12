@@ -22,6 +22,11 @@
     }
     let languageItems = getLanguageDropdownItems();
 
+    const getMaxPrice = async () => {
+        const awaitItems = await items;
+        return Math.max(...awaitItems.map(item => item.price));
+    }
+    let maxPrice = getMaxPrice();
 
 
 </script>
@@ -32,7 +37,12 @@
     <p><b>Author</b></p>
     <TextBox type="Author" bind:value={filters.author} onKeyUp={refresh}></TextBox>
     <p><b>Price</b></p>
-    <DoubleSlider valueFrom={filters.priceFrom} valueTo={filters.priceTo} onInput={refresh}></DoubleSlider>
+    {#await maxPrice}
+        <h1>Waiting for response from backend</h1>
+    {:then price}
+        <DoubleSlider valueFrom={filters.priceFrom} valueTo={filters.priceTo} min=0 max={price}
+                      onInput={refresh}></DoubleSlider>
+    {/await}
 </section>
 
 <style>
@@ -43,6 +53,7 @@
         align-items: start;
         margin-left: 1rem;
     }
+
     p {
         margin-bottom: 0.5rem;
     }
