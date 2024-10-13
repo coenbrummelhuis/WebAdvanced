@@ -5,18 +5,12 @@
 
     export let items;
 </script>
-{#await items}
-    <h1>Waiting for response from backend</h1>
-{:then list}
-    <ul>
-        {#each list as auctionItem}
-            <AuctionListItem bind:item={auctionItem}></AuctionListItem>
-        {/each}
-    </ul>
+<ul>
+    {#each items as auctionItem}
+        <AuctionListItem bind:item={auctionItem}></AuctionListItem>
+    {/each}
+</ul>
 
-{:catch ignored}
-    <h1>No connection to the backend can be established</h1>
-{/await}
 
 <style>
     ul {

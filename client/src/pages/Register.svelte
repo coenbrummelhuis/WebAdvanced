@@ -25,9 +25,9 @@
 <section>
     <article>
         <h1>Register</h1>
-        <TextBox type="E-mail" bind:value={email} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
-        <TextBox type="Password" bind:value={password} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
-        <TextBox type="Repeat password" bind:value={repeatedPassword} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
+        <TextBox valueType="E-mail" inputType="text" bind:value={email} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
+        <TextBox valueType="Password" inputType="password" bind:value={password} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
+        <TextBox valueType="Repeat password" inputType="password" bind:value={repeatedPassword} onKeyUp={async (e) => {(e.key === "Enter") ? await register() : ""}}></TextBox>
         <p class:invisible={!notice}>{noticeMessage}</p>
         <Button text="Register" click={register}></Button>
         <a href="/login">Already have an account? Log in</a>

@@ -238,3 +238,16 @@ Accept: application/json
         }
     );
 %}
+### GET REQUEST TO backend specific book
+GET {{protocol}}{{host}}:{{port}}/books/0
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "Request executed successfully",
+        function () {
+            client.assert(response.status === 200, "Response status is not 200");
+        }
+    );
+%}

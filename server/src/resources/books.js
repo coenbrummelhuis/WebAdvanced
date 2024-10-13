@@ -5,8 +5,9 @@ export default [{
     "launchDate": "26-02-2000",
     "language": "English",
     "author": "J.K. Rowling",
+    "img": ["https://i.pinimg.com/736x/a0/69/7a/a0697af2de64d67cf6dbb2a13dbc0457.jpg", "https://via.placeholder.com/200"],
 
-    "price": 10.50,
+    "price": 10,
     "bidders": [],
     "auction-date": new Date("2024-11-01T11:25:00")
 }, {
@@ -16,8 +17,9 @@ export default [{
     "launchDate": "01-06-1997",
     "language": "English",
     "author": "J.K. Rowling",
+    "img": ["https://via.placeholder.com/200"],
 
-    "price": 9.50,
+    "price": 9,
     "bidders": [],
     "auction-date": new Date("2024-11-03T11:25:00")
 },{
@@ -27,8 +29,9 @@ export default [{
     "launchDate": "02-06-1998",
     "language": "English",
     "author": "J.K. Rowling",
+    "img": ["https://via.placeholder.com/200"],
 
-    "price": 4.50,
+    "price": 4,
     "bidders": [],
     "auction-date": new Date("2024-10-28T11:25:00")
 },{
@@ -38,8 +41,9 @@ export default [{
     "launchDate": "02-06-1998",
     "language": "English",
     "author": "J.K. Rowling",
+    "img": ["https://via.placeholder.com/200"],
 
-    "price": 4.50,
+    "price": 4,
     "bidders": [],
     "auction-date": new Date("2024-10-11T13:25:00")
 },{
@@ -49,8 +53,9 @@ export default [{
     "launchDate": "02-06-1998",
     "language": "Nederlands",
     "author": "J.K. Rowling",
+    "img": ["https://via.placeholder.com/200"],
 
-    "price": 4.50,
+    "price": 4,
     "bidders": [],
-    "auction-date": new Date("2024-10-11T13:25:00")
+    "auction-date": new Date("2024-10-13T21:30:00")
 }];

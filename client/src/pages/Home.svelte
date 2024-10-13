@@ -41,14 +41,20 @@
     export let params;
 </script>
 <main>
-    <aside>
-        <Filters bind:items refresh={search}></Filters>
-    </aside>
-    <section>
-        <h1>Search</h1>
-        <TextBox type="Search" bind:value={filters["title"]} onKeyUp={search}></TextBox>
-        <AuctionList bind:filters={filters} bind:items ></AuctionList>
-    </section>
+    {#await items}
+    <h1>Waiting for response from backend</h1>
+    {:then auctionItems}
+        <aside>
+            <Filters items={auctionItems} refresh={search}></Filters>
+        </aside>
+        <section>
+            <h1>Search</h1>
+            <TextBox valueType="Search" inputType="text" bind:value={filters["title"]} onKeyUp={search}></TextBox>
+            <AuctionList bind:filters={filters} items={auctionItems} ></AuctionList>
+        </section>
+    {:catch ignored}
+    <h1>No connection to the backend can be established</h1>
+    {/await}
 </main>
 
 <style>
@@ -67,6 +73,7 @@
     }
     aside {
         max-width: 200px;/* Sidebar always in the first column */
+        text-align: left;
     }
     section {
         min-width: 100%; /* Main content always in the second column */
@@ -76,12 +83,17 @@
             grid-template-columns: 1fr; /* Only one column */
         }
         aside {
-            max-width: 100%; /* Sidebar always in the first column */
+            max-width: 100%;
+            text-align: center;/* Sidebar always in the first column */
         }
         h1 {
             margin-left: 0;
             text-align: center;
             min-width: 100%;
+        }
+        section {
+            text-align: center;
+            justify-items: center;
         }
 
     }

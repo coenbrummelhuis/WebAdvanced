@@ -23,8 +23,8 @@
 </script>
 <section>
     <h1>Log in</h1>
-    <TextBox type="E-mail" bind:value={email} onKeyUp={async (e) => {(e.key === "Enter") ? await login() : ""}}></TextBox>
-    <TextBox type="Password" bind:value={password} onKeyUp={async (e) => {(e.key === "Enter") ? await login() : ""}}></TextBox>
+    <TextBox valueType="E-mail" inputType="text" bind:value={email} onKeyUp={async (e) => {(e.key === "Enter") ? await login() : ""}}></TextBox>
+    <TextBox valueType="Password" inputType="password" bind:value={password} onKeyUp={async (e) => {(e.key === "Enter") ? await login() : ""}}></TextBox>
     <p class:invisible={!notice}>{noticeMessage}</p>
     <Button text="Login" click={async () => await login()}></Button>
     <a href="/register">Don't have an account? Register </a>

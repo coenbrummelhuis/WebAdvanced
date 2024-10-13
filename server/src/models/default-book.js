@@ -9,6 +9,7 @@ export default {
     "launchDate": "26-02-2000",
     "language": "English",
     "author": "J.K. Rowling",
+    "img": [],
 
     "price": 70.20,
     "bidders": [],

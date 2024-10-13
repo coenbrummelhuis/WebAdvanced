@@ -8,23 +8,15 @@
     export let items;
     export let refresh;
 
-    const getLanguageDropdownItems = async () => {
-        const awaitItems = await items;
-        let uniqueLanguagues = new Set();
-        awaitItems.map(item => item.language).forEach(language => {
-            let firstChar = language.charAt(0);
-            firstChar = firstChar.toUpperCase();
-            language = language.slice(1);
-            language = firstChar + language;
-            uniqueLanguagues.add(language)
-        });
-        return uniqueLanguagues;
-    }
-    let languageItems = getLanguageDropdownItems();
+    let languageItems = new Set(items.map(item => item.language).map(language => {
+        let firstChar = language.charAt(0);
+        firstChar = firstChar.toUpperCase();
+        language = language.slice(1);
+        return firstChar + language;
+    }))
 
     const getMaxPrice = async () => {
-        const awaitItems = await items;
-        return Math.max(...awaitItems.map(item => item.price));
+        return Math.max(...items.map(item => item.price));
     }
     let maxPrice = getMaxPrice();
 
@@ -35,12 +27,12 @@
     <p><b>Language</b></p>
     <DropDownMenu menuItems={languageItems} bind:value={filters.language} onChange={refresh}></DropDownMenu>
     <p><b>Author</b></p>
-    <TextBox type="Author" bind:value={filters.author} onKeyUp={refresh}></TextBox>
+    <TextBox valueType="Author" inputType="text" bind:value={filters.author} onKeyUp={refresh}></TextBox>
     <p><b>Price</b></p>
     {#await maxPrice}
         <h1>Waiting for response from backend</h1>
     {:then price}
-        <DoubleSlider valueFrom={filters.priceFrom} valueTo={filters.priceTo} min=0 max={price}
+        <DoubleSlider bind:valueFrom={filters.priceFrom} bind:valueTo={filters.priceTo} min=0 max={price}
                       onInput={refresh}></DoubleSlider>
     {/await}
 </section>
@@ -49,12 +41,13 @@
     section {
         display: flex;
         flex-direction: column;
-        justify-content: start;
-        align-items: start;
+        justify-content: inherit;
+        align-items: inherit;
         margin-left: 1rem;
     }
 
     p {
         margin-bottom: 0.5rem;
+        text-align: inherit;
     }
 </style>

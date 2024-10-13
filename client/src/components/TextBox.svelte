@@ -1,16 +1,24 @@
 <script>
-    export let type;
+    export let valueType;
+    export let inputType;
     export let value;
     export let onKeyUp;
+
+    const type = (inputType === "text" || inputType === "number" || inputType === "email" || inputType === "password") ? inputType : "text";
 
     const keyUpEvent = (event) => {
         onKeyUp(event);
     }
 </script>
+<div>
+    <input on:keyup={keyUpEvent} on:change={keyUpEvent} bind:value={value} {...{type}} placeholder="{valueType}...">
+</div>
 
-<input on:keyup={keyUpEvent} bind:value={value} type="text" placeholder="{type}...">
 
 <style>
+    div {
+        text-align: inherit;
+    }
     input {
         padding: 1em 2em;
         border-radius: 1em;
