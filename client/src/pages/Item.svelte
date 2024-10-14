@@ -1,11 +1,22 @@
 <script>
     import page from "page";
     import {onMount} from "svelte";
+    import TextBox from "../components/TextBox.svelte";
+    import Button from "../components/Button.svelte";
+    import userStore from "../stores/user.js"
+    import Bidder from "../components/Bidder.svelte";
+    import { hasBidderRole } from "../js/auth-controller.js";
+
+    let user = $userStore;
+
+    let notice = false;
+    let noticeMessage = "Test";
 
     export let params;
 
     let auctionEnded = false;
     let currentDateTime = new Date();
+    let newBid = 0;
 
     onMount(() => {
         const interval = setInterval(() => {
@@ -30,9 +41,42 @@
             }
         });
         if (response.ok) {
-            return await response.json();
+            const data = await response.json();
+            newBid = parseInt(data.price) + 1;
+            return data;
         } else {
             throw new Error("Item not found");
+        }
+    }
+
+    let item = getItem();
+
+    $: isBidder = hasBidderRole(user);
+
+    const sendNewBid = async () => {
+        notice = false;
+        noticeMessage = "";
+        const id = params.id;
+        if (id === undefined || isNaN(id)) {
+            page.redirect("/")
+        }
+        const response = await fetch(`http://localhost:3000/books/${id}/bids`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + user.token
+            },
+            body: JSON.stringify({price: newBid})
+        });
+        if (response.ok) {
+            item = await getItem();
+            return await response.json();
+        } else {
+            notice = true;
+            console.log(response)
+            let data = await response.json();
+            noticeMessage = data.message;
         }
     }
 
@@ -59,7 +103,7 @@
 
 </script>
 <main>
-    {#await getItem()}
+    {#await item}
         <p>Loading...</p>
     {:then data}
         <aside>
@@ -86,7 +130,27 @@
             <p>Current bid: <i>€{(data.price).toLocaleString(undefined, {minimumFractionDigits: 2})}</i></p>
             <p>End date: <i>{new Date(data["auction-date"]).toLocaleString()}</i></p>
             <p>Time left: <i>{getTime(new Date(data["auction-date"]).getTime())}</i></p>
-            <button disabled="{auctionEnded}">Bid</button>
+            <p><b>Bids</b></p>
+            {#if data.bidders.length === 0}
+                <p>No bids yet!</p>
+            {:else}
+                {#each data.bidders as bidder}
+                    <Bidder username={bidder.bidder} price={bidder.price}></Bidder>
+                {/each}
+            {/if}
+            {#if isBidder}
+                {#if auctionEnded}
+                    <p><b>Auction ended!</b></p>
+                {:else}
+                    <p><b>New bid:</b></p>
+                    <TextBox valueType="bid" inputType="number" bind:value={newBid} onKeyUp={() => ""}></TextBox>
+                    <p class="notice" class:invisible={!notice}>{noticeMessage}</p>
+                    <Button text="Bid" click={async () => await sendNewBid()}></Button>
+                {/if}
+            {:else}
+                <p><b>You must be logged in to bid!</b></p>
+            {/if}
+
         </aside>
     {:catch e}
         <a href="/">
@@ -102,9 +166,7 @@
         background-color: #D9D9D9;
         padding: 1rem;
         margin: 1rem;
-        width: max(300px, 30%);
         border-radius: 1em;
-
     }
 
     section {
@@ -128,6 +190,15 @@
         align-items: center;
     }
 
+    .notice {
+        color: red;
+        margin: 0;
+    }
+
+    .invisible {
+        visibility: hidden;
+    }
+
     h1 {
         width: 80%;
     }
@@ -136,13 +207,12 @@
         margin: 0 0 1rem;
     }
 
+
     main {
         display: grid;
-        height: 200px;
-        grid-template-columns: 30% 30% 30%; /* Sidebar min 200px, content 3 times the remaining space */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 1rem;
         padding: 0;
         margin: 2rem;
-        justify-content: center;
     }
 </style>

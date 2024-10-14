@@ -50,7 +50,7 @@ export async function loginUser(req, res) {
 export async function logoutUser(req, res) {
     const user = req.user;
     revokeSecret(user);
-    res.status(httpStatusCodes.OK).json({message: "Succesfully logged out!"});
+    res.status(httpStatusCodes.NO_CONTENT).send();
 }
 
 // Helper methods

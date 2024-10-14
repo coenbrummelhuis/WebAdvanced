@@ -1,8 +1,6 @@
 <script>
     import AuctionListItem from "./AuctionListItem.svelte";
 
-    export let filters;
-
     export let items;
 </script>
 <ul>

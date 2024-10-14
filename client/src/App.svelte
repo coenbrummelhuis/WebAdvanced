@@ -8,6 +8,7 @@
     import Register from "./pages/Register.svelte";
     import PageNotFound from "./pages/PageNotFound.svelte";
     import Items from "./pages/Item.svelte";
+    import Account from "./pages/Account.svelte";
 
     let page;
     let params;
@@ -39,6 +40,11 @@
     }, () => {
         page = Items;
     });
+    router('/account', (ctx) => {
+        page = Account;
+        currentRoute = ctx.pathname;
+        params = ctx;
+    })
     router('/*', (ctx) => {
         page = PageNotFound;
         currentRoute = ctx.pathname;

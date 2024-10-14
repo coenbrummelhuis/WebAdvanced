@@ -44,7 +44,10 @@ export default [{
     "img": ["https://via.placeholder.com/200"],
 
     "price": 4,
-    "bidders": [],
+    "bidders": [{
+        "bidder": "user@user.com",
+        "price": 4
+    }],
     "auction-date": new Date("2024-10-11T13:25:00")
 },{
     "id": 4,
@@ -57,5 +60,5 @@ export default [{
 
     "price": 4,
     "bidders": [],
-    "auction-date": new Date("2024-10-13T21:30:00")
+    "auction-date": new Date("2024-10-14T13:48:30")
 }];

@@ -3,7 +3,7 @@
     import DropDownMenu from "./DropDownMenu.svelte";
     import TextBox from "./TextBox.svelte";
     import DoubleSlider from "./DoubleSlider.svelte";
-    // import {getAuctionItems} from "../pages/Home.svelte";
+
     let filters = $filtersStore;
     export let items;
     export let refresh;

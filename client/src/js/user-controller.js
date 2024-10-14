@@ -1,5 +1,5 @@
-export async function loginUser(username, password, user)  {
-    if(!validEmail(username)) {
+export async function loginUser(username, password, user) {
+    if (!validEmail(username)) {
         throw new Error("Email is not a valid email!");
     }
     if (password === null) {
@@ -19,15 +19,15 @@ export async function loginUser(username, password, user)  {
     });
     const data = await response.json();
     const status = response.status;
-    if(status === 200) {
+    if (status === 200) {
         user.token = data.token;
-    }else {
+    } else {
         throw new Error(data.message);
     }
 }
 
 export async function registerUser(username, password, repeatedPassword, user) {
-    if(!validEmail(username)) {
+    if (!validEmail(username)) {
         throw new Error("Email is not a valid email!");
     }
     validPassword(password);
@@ -48,11 +48,28 @@ export async function registerUser(username, password, repeatedPassword, user) {
     });
     const data = await response.json();
     const status = response.status;
-    if(status === 201) {
+    if (status === 201) {
         user.token = data.token;
-    }else {
+    } else {
         throw new Error(data.message);
     }
+}
+
+export async function logoutUser(token) {
+    const response = await fetch("http://localhost:3000/auth", {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    });
+    const status = response.status;
+    if (status === 204) {
+        return;
+    }
+    const data = await response.json();
+    throw new Error(await data.message);
 }
 
 function validEmail(email) {

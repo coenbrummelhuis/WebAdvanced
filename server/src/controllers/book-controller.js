@@ -1,6 +1,7 @@
 import httpStatusCodes from "http-status-codes";
 import defaultBooks from "../resources/books.js";
 import defaultBook from "../models/default-book.js";
+import {getUserById} from "./user-controller.js";
 
 let books = defaultBooks;
 
@@ -57,6 +58,10 @@ export function bidBook(req, res) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "Price is not a number!"});
         return;
     }
+    if (parseInt(price) !== parseFloat(price)) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Price can't have decimals!"});
+        return
+    }
 
 
     if (bidder === undefined || bidder["username"] === undefined) {
@@ -73,6 +78,12 @@ export function bidBook(req, res) {
         res.status(httpStatusCodes.CONFLICT).json({message: "A bid higher or equal to this bid has already been placed!"});
         return;
     }
+    if (book.bidders.at(book.bidders.length - 1) !== undefined) {
+        if (book.bidders.at(book.bidders.length - 1).bidder === bidder.username) {
+            res.status(httpStatusCodes.CONFLICT).json({message: "You already have the highest bid!"});
+            return;
+        }
+    }
 
     book.bidders = [...book.bidders, {
         "bidder": bidder.username,
@@ -82,6 +93,7 @@ export function bidBook(req, res) {
     const sendBook = Object.assign({}, book);
     res.status(httpStatusCodes.OK).json(sendBook);
 }
+
 /**
  * CRUD: READ
  *
@@ -123,7 +135,7 @@ export function getBooks(req, res) {
                     if (isNaN(filter.priceFrom)) {
                         throw new Error("Upper price is not a number");
                     }
-                    return b.price >= filter.priceFrom;
+                    return b.price >= parseInt(filter.priceFrom);
                 } else {
                     return true;
                 }
@@ -132,7 +144,7 @@ export function getBooks(req, res) {
                     if (isNaN(filter.priceTo)) {
                         throw new Error("Upper price is not a number");
                     }
-                    return b.price <= filter.priceTo;
+                    return b.price <= parseInt(filter.priceTo);
                 } else {
                     return true;
                 }
@@ -150,7 +162,7 @@ export function getBooks(req, res) {
  * @param req The request of the server
  * @param res The response to the client
  */
-export function getBookById (req, res) {
+export function getBookById(req, res) {
     const id = req.params.id || undefined;
     if (id === undefined) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID can't be null!"});
@@ -176,21 +188,31 @@ export function getBookById (req, res) {
  * @param res The response of the server
  */
 export function getBidsByUser(req, res) {
-    const id = req.params.id || undefined;
-    const userId = req.user.id || undefined
-    if(id === undefined || userId === undefined) {
+    const id = parseInt(req.params.id);
+    console.log(req.user.id)
+    const userId = req.user.id
+    if (id === undefined || userId === undefined) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "Please add an id to the request!"})
+        return;
     }
+    console.log(id, userId);
     if (id !== userId) {
         res.status(httpStatusCodes.FORBIDDEN).json({message: "You are not authorized to view another persons bids!"});
         return;
     }
     let bids = [];
-    for (let book in books) {
-        if (book.bidders.includes(b => b.username === id)) {
-            bids.push(book);
+    books.at(0).bidders.forEach(b => console.log(b.bidder))
+    console.log();
+    for (let book of books) {
+        if (book.bidders !== undefined) {
+            book.bidders.forEach(b => {
+                if (b.bidder === getUserById(id).username) {
+                    bids.push(book);
+                }
+            });
         }
     }
+    console.log("Here 2")
     res.status(httpStatusCodes.OK).json({message: bids});
 }
 

@@ -20,6 +20,10 @@
             return minutes + " minute(s) " + seconds + " second(s)";
         }
     }
+
+    $: itemPriceWithDecimals = (price) => {
+        return price.toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
     export let item;
 </script>
 <li>
@@ -32,7 +36,7 @@
                 {/if}
             <h1>{item.title}</h1>
             <h3>{getTime(new Date().getTime(), new Date(item["auction-date"]).getTime())}</h3>
-            <h3>€{(item.price).toLocaleString(undefined, {minimumFractionDigits: 2})}</h3>
+            <h3>€{itemPriceWithDecimals(parseInt(item.price))}</h3>
         </article>
     </a>
 </li>
@@ -43,9 +47,13 @@
         background-color: #D9D9D9;
         padding: 1rem;
         margin: 1rem;
-        width: max(200px, 30%);
+        width: max(200px, 90%);
         border-radius: 2em;
         justify-content: center;
         text-align: center;
+    }
+    a {
+        text-decoration: none;
+        color: black;
     }
 </style>
