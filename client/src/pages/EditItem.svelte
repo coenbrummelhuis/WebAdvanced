@@ -5,7 +5,7 @@
     import {hasAdminRole} from "../js/auth-controller.js";
     import TextBox from "../components/TextBox.svelte";
     import Button from "../components/Button.svelte";
-    import {addNewAuctionItem} from "../js/item-controller.js";
+    import {editAuctionItem, getAuctionItemById} from "../js/item-controller.js";
 
     let user = $userStore;
 
@@ -24,17 +24,32 @@
         "auction-date": ""
     }
 
-    onMount(() => {
+    onMount(async () => {
         if (!hasAdminRole(user)) {
             page.redirect("/");
         }
+        const oldItem = await getAuctionItemById(params.id);
+        const launchDate = new Date(oldItem.launchDate);
+        const auctionDate = new Date(oldItem["auction-date"]);
+        newItem = {
+            "id": oldItem.id,
+            "title": oldItem.title,
+            "description": oldItem.description,
+            "launchDate": `${launchDate.getFullYear()}-${launchDate.getMonth() + 1}-${launchDate.getDate()}`,
+            "language": oldItem.language,
+            "author": oldItem.author,
+            "bidders": oldItem.bidders,
+            "img": oldItem.img,
+            "price": oldItem.price,
+            "auction-date": `${auctionDate.getFullYear()}-${auctionDate.getMonth() + 1}-${auctionDate.getDate()}`
+        }
     });
 
-    const addNewBook = async () => {
+    const editBook = async () => {
         notice = false;
         noticeMessage = "";
         try {
-            const result = await addNewAuctionItem(newItem, user);
+            const result = await editAuctionItem(params.id, newItem, user);
             page.redirect(`/items/${result.id}`);
         } catch (e) {
             notice = true;
@@ -65,7 +80,7 @@
         <label for="auctionDate">Auction date</label>
         <TextBox valueType="Auction date YYYY-MM-DD" inputType="text" bind:value={newItem["auction-date"]}
                  onKeyUp={() => ""}></TextBox>
-        <Button text="Add item" click={addNewBook}></Button>
+        <Button text="Add item" click={editBook}></Button>
     </form>
 </main>
 <style>

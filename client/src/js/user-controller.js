@@ -71,8 +71,8 @@ export async function logoutUser(user) {
         user.token = undefined;
         page.redirect("/");
     }
-    const data = await response.json();
-    throw new Error(await data.message);
+    user.token = undefined;
+    page.redirect("/");
 }
 
 function validEmail(email) {

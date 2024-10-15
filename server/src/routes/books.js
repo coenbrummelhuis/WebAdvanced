@@ -39,7 +39,7 @@ router.put('/:id', checkContentTypeHeader, isLoggedIn, isAdmin, (req, res) => {
 /**
  * CRUD: DELETE
  */
-router.delete('/id', isLoggedIn, isAdmin, (req, res) => {
+router.delete('/:id', isLoggedIn, isAdmin, (req, res) => {
     deleteBook(req, res);
 });
 

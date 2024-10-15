@@ -239,7 +239,7 @@ export function updateBook(req, res) {
         return;
     }
 
-    let oldBook = books.findIndex(b => b["id"] === parseInt(id)) || null;
+    let oldBook = books.findIndex(b => b["id"] === parseInt(id));
     if (oldBook === null) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
         return;
@@ -257,7 +257,7 @@ export function updateBook(req, res) {
  */
 export function deleteBook(req, res) {
     const id = req.params.id || undefined;
-    const bookId = books.findIndex(b => b["id"] === parseInt(id)) || null;
+    const bookId = books.findIndex(b => b["id"] === parseInt(id));
     if (bookId === null) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
         return;

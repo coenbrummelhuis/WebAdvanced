@@ -5,7 +5,8 @@
     import userStore from "../stores/user.js"
     import Bidder from "../components/Bidder.svelte";
     import {getAuctionItemById, getFormattedTimeBetween, placeBid} from "../js/item-controller.js";
-    import {hasBidderRole} from "../js/auth-controller.js";
+    import {hasBidderRole, hasAdminRole} from "../js/auth-controller.js";
+    import AdminItemHeader from "../components/AdminItemHeader.svelte";
 
     export let params;
 
@@ -50,6 +51,7 @@
     $: isBidder = hasBidderRole(user);
     $: getTime = (endDate) => getFormattedTimeBetween(currentDateTime, endDate);
 </script>
+<AdminItemHeader active={hasAdminRole(user) } notice={[notice, noticeMessage]} {params}></AdminItemHeader>
 <main>
     {#await item}
         <p>Loading...</p>
@@ -67,7 +69,7 @@
         <section>
             <h1>{data.title}</h1>
 
-            <p>Launchdate: <i>{data.launchDate}</i></p>
+            <p>Launchdate: <i>{new Date(data.launchDate).toLocaleDateString()}</i></p>
             <p>Author: <i>{data.author}</i></p>
             <p>Price: <i>€{(data.price).toLocaleString(undefined, {minimumFractionDigits: 2})}</i></p>
 
@@ -114,8 +116,9 @@
         display: flex;
         background-color: #D9D9D9;
         padding: 1rem;
-        margin: 1rem;
+        margin: 0 1rem 1rem;
         border-radius: 1em;
+
     }
 
     section {

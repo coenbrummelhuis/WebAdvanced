@@ -6,9 +6,9 @@
 </script>
 <nav>
     <a href="/">
-    <section class="titles">
+    <section>
         <img {src} alt="Logo">
-        <section>
+        <section class="titles">
             <ul>
                 <li><h1 id="title">BidBook</h1></li>
                 <li><p id="subtitle">The site to find used books!</p></li>

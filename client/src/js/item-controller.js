@@ -20,21 +20,59 @@ export async function addNewAuctionItem(item, user) {
     }
 }
 
-export async function getAllAuctionItems() {
-        const response = await fetch("http://localhost:3000/books", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        });
-        const data = await response.json();
-        const status = response.status;
-        if (status !== 200) {
-            throw new Error(data.message);
-        } else {
-            return data;
+export async function editAuctionItem(id, item, user) {
+    await checkItemValidity(item);
+    const response = await fetch(`http://localhost:3000/books/${parseInt(id)}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + user.token
+        },
+        body: JSON.stringify(item)
+    });
+    const data = await response.json();
+    const status = response.status;
+    if (status !== 200) {
+        throw new Error(data.message);
+    } else {
+        return data;
+    }
+}
+
+export async function deleteAuctionItem(id, user) {
+    const response = await fetch(`http://localhost:3000/books/${parseInt(id)}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + user.token
         }
+    });
+    const data = await response.json();
+    const status = response.status;
+    if (status !== 200) {
+        throw new Error(data.message);
+    } else {
+        return data;
+    }
+}
+
+export async function getAllAuctionItems() {
+    const response = await fetch("http://localhost:3000/books", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+    });
+    const data = await response.json();
+    const status = response.status;
+    if (status !== 200) {
+        throw new Error(data.message);
+    } else {
+        return data;
+    }
 }
 
 export async function getAuctionItemById(id) {
@@ -78,11 +116,12 @@ export async function getFilteredAuctionItems(filter) {
         return data;
     }
 }
+
 export async function getBidsOfUser(user) {
     const userToken = user.token;
     const payload = atob(user.token.split('.')[1]);
     if (payload === undefined) {
-       throw new Error("Invalid token");
+        throw new Error("Invalid token");
     }
     const userId = JSON.parse(payload)["userId"];
     const response = await fetch(`http://localhost:3000/users/${userId}/bids`, {
@@ -142,11 +181,11 @@ export function getFormattedTimeBetween(dateFrom, dateTo) {
 }
 
 function getTimeBetweenDates(dateFrom, dateTo) {
-   const difference = new Date(dateTo).getTime() - new Date(dateFrom).getTime();
-   const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-   const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-   const minutes = Math.floor((difference / (1000 * 60) % 60));
-   const seconds = Math.floor((difference / 1000) % 60);
+    const difference = new Date(dateTo).getTime() - new Date(dateFrom).getTime();
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((difference / (1000 * 60) % 60));
+    const seconds = Math.floor((difference / 1000) % 60);
     return {days, hours, minutes, seconds};
 }
 
@@ -182,14 +221,8 @@ async function checkItemValidity(item) {
     if (item.author === undefined || item.author === "") {
         throw new Error("Author is required");
     }
-    if (item.img === undefined || item.img === "") {
-        throw new Error("Image is required");
-    }
 
-    const resp = await fetch(item.img[0], { method: 'HEAD' });
-    if(resp.status !== 200) {
-        item.img[0] = "https://dummyimage.com/200x300/";
-    }
+    item.img[0] = "https://dummyimage.com/200x300/";
 
     if (item["auction-date"] === undefined || item["auction-date"] === "") {
         throw new Error("Auction date is required");
@@ -203,7 +236,7 @@ async function checkItemValidity(item) {
 function getAllBids(user, bids) {
     const allBids = [];
     for (const bid of bids) {
-        if(bid.bidders.length === 0) {
+        if (bid.bidders.length === 0) {
             return;
         }
         if (bid.bidders[bid.bidders.length - 1].userId === user.userId) {

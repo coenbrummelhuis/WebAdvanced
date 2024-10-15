@@ -9,6 +9,7 @@
     import Items from "./pages/Item.svelte";
     import Account from "./pages/Account.svelte";
     import AddItem from "./pages/AddItem.svelte";
+    import EditItem from "./pages/EditItem.svelte";
 
     let page;
     let params;
@@ -40,6 +41,13 @@
         next()
     }, () => {
         page = Items;
+    });
+    router('/items/:id/edit', (ctx, next) => {
+        params = ctx.params;
+        currentRoute = ctx.pathname
+        next()
+    }, () => {
+        page = EditItem;
     });
     router('/account', (ctx) => {
         page = Account;
