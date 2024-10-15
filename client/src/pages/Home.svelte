@@ -3,9 +3,14 @@
     import Filters from "../components/Filters.svelte";
     import TextBox from "../components/TextBox.svelte";
     import filtersStore from "../stores/filter.js"
-    import {onMount} from "svelte";
+    import userStore from "../stores/user.js";
+    import { getAllAuctionItems, getFilteredAuctionItems} from "../js/item-controller.js";
+    import {onDestroy, onMount} from "svelte";
+    import AdminHomeHeader from "../components/AdminHomeHeader.svelte";
+    import {hasAdminRole} from "../js/auth-controller.js";
 
     let filters = $filtersStore
+    let user = $userStore;
 
     onMount(() => {
         search();
@@ -16,46 +21,7 @@
         filteredItems = await getFilteredAuctionItems(filters);
     }
 
-    const getAllAuctionItems = async () => {
-        const response = await fetch("http://localhost:3000/books", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        });
-        const data = await response.json();
-        const status = response.status;
-        if (status !== 200) {
-            throw new Error(data.message);
-        } else {
-            return data;
-        }
-    }
-
-    const getFilteredAuctionItems = async (filter) => {
-        let filterURL = "";
-        for (const filterName in filter) {
-            if (filter[filterName] !== "" && filter[filterName] !== -1) {
-                filterURL += "&" + filterName + "=" + filter[filterName];
-            }
-        }
-        const response = await fetch("http://localhost:3000/books?" + filterURL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        });
-
-        const data = await response.json();
-        const status = response.status;
-        if (status !== 200) {
-            throw new Error(data.message);
-        } else {
-            return data;
-        }
-    }
+    $: hasAdmin = () => hasAdminRole(user)
 
     let filteredItems = getFilteredAuctionItems(filters);
     let allItems = getAllAuctionItems();
@@ -73,7 +39,8 @@
                 <Filters items={allItems} refresh={search}></Filters>
             </aside>
             <section>
-                <h1>Search</h1>
+                <AdminHomeHeader active={hasAdmin()}></AdminHomeHeader>
+                <h1 id="search">Search</h1>
                 <TextBox valueType="Search" inputType="text" bind:value={filters["title"]} onKeyUp={search}></TextBox>
                 <AuctionList items={auctionItems}></AuctionList>
             </section>
@@ -90,6 +57,10 @@
         width: 80%;
         text-align: start;
         margin-left: 3em;
+    }
+
+    #search {
+        margin-top: 0;
     }
 
     main {

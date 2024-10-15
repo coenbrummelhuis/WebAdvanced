@@ -2,13 +2,13 @@
     import router from 'page';
 
     import Home from "./pages/Home.svelte";
-    import About from "./pages/About.svelte";
     import Header from "./components/Header.svelte";
     import Login from "./pages/Login.svelte";
     import Register from "./pages/Register.svelte";
     import PageNotFound from "./pages/PageNotFound.svelte";
     import Items from "./pages/Item.svelte";
     import Account from "./pages/Account.svelte";
+    import AddItem from "./pages/AddItem.svelte";
 
     let page;
     let params;
@@ -18,8 +18,9 @@
         page = Home;
         currentRoute = ctx.pathname;
     });
-    router('/about', (ctx) => {
-        page = About;
+
+    router('/add-item', (ctx) => {
+        page = AddItem;
         currentRoute = ctx.pathname;
         params = ctx;
     });

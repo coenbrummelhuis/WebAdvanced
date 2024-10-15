@@ -1,6 +1,5 @@
 <script>
     import user from "../stores/user.js";
-
     const src = "./src/assets/book_white.png"
 
     export let active

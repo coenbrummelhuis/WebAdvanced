@@ -1,3 +1,5 @@
+import page from "page";
+
 export async function loginUser(username, password, user) {
     if (!validEmail(username)) {
         throw new Error("Email is not a valid email!");
@@ -55,18 +57,19 @@ export async function registerUser(username, password, repeatedPassword, user) {
     }
 }
 
-export async function logoutUser(token) {
+export async function logoutUser(user) {
     const response = await fetch("http://localhost:3000/auth", {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + user.token
         }
     });
     const status = response.status;
     if (status === 204) {
-        return;
+        user.token = undefined;
+        page.redirect("/");
     }
     const data = await response.json();
     throw new Error(await data.message);

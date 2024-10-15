@@ -189,20 +189,16 @@ export function getBookById(req, res) {
  */
 export function getBidsByUser(req, res) {
     const id = parseInt(req.params.id);
-    console.log(req.user.id)
     const userId = req.user.id
     if (id === undefined || userId === undefined) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "Please add an id to the request!"})
         return;
     }
-    console.log(id, userId);
     if (id !== userId) {
         res.status(httpStatusCodes.FORBIDDEN).json({message: "You are not authorized to view another persons bids!"});
         return;
     }
     let bids = [];
-    books.at(0).bidders.forEach(b => console.log(b.bidder))
-    console.log();
     for (let book of books) {
         if (book.bidders !== undefined) {
             book.bidders.forEach(b => {
@@ -212,7 +208,6 @@ export function getBidsByUser(req, res) {
             });
         }
     }
-    console.log("Here 2")
     res.status(httpStatusCodes.OK).json({message: bids});
 }
 
@@ -276,37 +271,40 @@ export function deleteBook(req, res) {
 
 function checkBook(book) {
     let newBook;
+    if (!hasCorrectDate(book["launchDate"])) {
+        throw new Error("Launch date is in incorrect format!");
+    }
+    book["launchDate"] = new Date(book["launchDate"]);
+    if (!hasCorrectDate(book["auction-date"])) {
+        throw new Error("Auction date is in incorrect format!");
+    }
+    book["auction-date"] = new Date(book["auction-date"]);
     try {
         newBook = checkBookAttributes(book);
     } catch (e) {
         throw e;
     }
-    if (!hasCorrectDate(newBook["launchDate"])) {
-        throw new Error("Launch date is in incorrect format!");
-    }
-    if (!hasCorrectDate(newBook["auction-date"])) {
-        throw new Error("Auction date is in incorrect format!");
-    }
-    if (isNaN(newBook["price"])) {
+    if (isNaN(book["price"])) {
         throw new Error("Price is not a number!");
     }
     return newBook;
 }
 
 function hasCorrectDate(date) {
-    if (date.split("-").length !== 3) {
+    let newDate = Date.parse(date);
+    if (newDate === undefined || isNaN(newDate)) {
         return false;
     }
-    if (date.split("-").some(datePart => isNaN(parseInt(datePart)))) {
-        return false;
-    }
-    return (date.split("-")[0] <= 31 && date.split("-")[1] <= 12);
+    return true;
 }
 
 function checkBookAttributes(book) {
     const newResource = Object.assign({}, defaultBook);
     const resource = book;
     for (const attribute in newResource) {
+        console.log(typeof newResource[attribute]);
+        console.log(typeof  resource[attribute]);
+
         if (resource[attribute] === undefined) {
             throw new Error(`This book doesn't have an ${attribute}!`);
         } else if (typeof newResource[attribute] !== typeof resource[attribute]) {

@@ -11,16 +11,12 @@
     onMount(() => {
         min = parseInt(min);
         max = parseInt(max);
-        valueTo = max;
         valueFrom = min
-        console.log(min)
+        valueTo = max;
     })
 
 
     function controlFromSlider() {
-        // if (valueFrom < 0 || valueFrom >= max) {
-        //     valueFrom = min;
-        // }
         if (valueFrom < min) {
             valueFrom = min;
         }
@@ -72,7 +68,7 @@
 </div>
 
 <style>
-    .sliders_control {
+    div {
         display: grid;
         grid-template-columns: 1fr;
         justify-content: center;
@@ -81,30 +77,8 @@
         text-align: center;
     }
 
-    #fromSlider, #toSlider {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    #toSlider {
-        z-index: 1;
-        height: 5px;
-        background: linear-gradient(
-                to right,
-                #C6C6C6 0%,
-                #C6C6C6 var(--fromValueDivRange),
-                #25daa5 var(--fromValueDivRange),
-                #25daa5 var(--toValueDivRange),
-                #C6C6C6 var(--toValueDivRange),
-                #C6C6C6 100%
-        );
-        border-radius: 1em;
-
-    }
-
-    #fromSlider {
-        height: 0;
-        z-index: 2;
+    p {
+        margin: 0 0 0 0.5rem;
     }
 
     input[type=range] {
@@ -114,7 +88,28 @@
         width: 80%;
     }
 
-    p {
-        margin: 0 0 0 0.5rem;
+    #fromSlider, #toSlider {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    #fromSlider {
+        height: 0;
+        z-index: 2;
+    }
+
+    #toSlider {
+        z-index: 1;
+        height: 5px;
+        border-radius: 1em;
+        background: linear-gradient(
+                to right,
+                #C6C6C6 0%,
+                #C6C6C6 var(--fromValueDivRange),
+                #25daa5 var(--fromValueDivRange),
+                #25daa5 var(--toValueDivRange),
+                #C6C6C6 var(--toValueDivRange),
+                #C6C6C6 100%
+        );
     }
 </style>

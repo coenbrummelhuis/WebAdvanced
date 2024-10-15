@@ -1,18 +1,18 @@
 <script>
+    import page from "page";
     import Button from "../components/Button.svelte";
+    import AuctionListItem from "../components/AuctionListItem.svelte";
     import userStore from "../stores/user.js";
+
     import {logoutUser} from "../js/user-controller.js";
     import {onMount} from "svelte";
-    import page from "page";
     import {isUserLoggedIn} from "../js/auth-controller.js";
     import {getBidsOfUser} from "../js/item-controller.js";
-    import AuctionListItem from "../components/AuctionListItem.svelte";
 
-    let user = $userStore;
+    const user = $userStore;
 
     onMount(() => {
         if (!isUserLoggedIn(user)) {
-            console.log("User is not logged in");
             page.redirect("/login");
         }
     });
@@ -21,12 +21,7 @@
 </script>
 <main>
     <h1>Account</h1>
-    <Button text="Log out" click={async () => {
-        const token = user.token;
-        await logoutUser(token);
-        user.token = undefined;
-        page.redirect("/");
-    }}>
+    <Button text="Log out" click={() => logoutUser(user)}>
     </Button>
 
     <section>
@@ -56,7 +51,6 @@
                 </ul>
             {/if}
         {:catch error}
-
             <p>{error.message}</p>
         {/await}
     </section>

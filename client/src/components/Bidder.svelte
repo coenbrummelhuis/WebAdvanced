@@ -11,6 +11,7 @@
         border: 2px solid;
         margin: 0.2rem;
     }
+
     i {
         font-style: normal;
     }

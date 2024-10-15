@@ -13,6 +13,9 @@ Accept: application/json
 %}
 
 ### POST request to server that's valid
+< {%
+    request.variables.set("date", new Date())
+%}
 POST {{protocol}}{{host}}:{{port}}/books
 Content-Type: application/json
 Accept: application/json
@@ -26,7 +29,8 @@ Authorization: Bearer {{token}}
   "author": "J.K. Rowling",
   "price": 2,
   "bidders": [],
-  "auction-date": "24-11-2024"
+  "auction-date": "15-10-2024",
+  "img": ["https://images.penguinrandomhouse.com/cover/9780593124611"]
 }
 
 > {%

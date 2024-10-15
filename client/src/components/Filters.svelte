@@ -5,6 +5,7 @@
     import DoubleSlider from "./DoubleSlider.svelte";
 
     let filters = $filtersStore;
+
     export let items;
     export let refresh;
 
@@ -18,6 +19,7 @@
     const getMaxPrice = async () => {
         return Math.max(...items.map(item => item.price));
     }
+
     let maxPrice = getMaxPrice();
 
 

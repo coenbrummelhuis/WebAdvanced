@@ -1,106 +1,54 @@
 <script>
-    import page from "page";
-    import {onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import TextBox from "../components/TextBox.svelte";
     import Button from "../components/Button.svelte";
     import userStore from "../stores/user.js"
     import Bidder from "../components/Bidder.svelte";
-    import { hasBidderRole } from "../js/auth-controller.js";
+    import {getAuctionItemById, getFormattedTimeBetween, placeBid} from "../js/item-controller.js";
+    import {hasBidderRole} from "../js/auth-controller.js";
+
+    export let params;
 
     let user = $userStore;
 
     let notice = false;
     let noticeMessage = "Test";
 
-    export let params;
-
     let auctionEnded = false;
     let currentDateTime = new Date();
+    let interval;
     let newBid = 0;
 
     onMount(() => {
         const interval = setInterval(() => {
             currentDateTime = new Date();
         }, 1000);
-        return () => {
-            clearInterval(interval);
-        };
+        return () => clearInterval(interval)
     });
+
+    onDestroy(() => clearInterval(interval));
 
 
     const getItem = async () => {
-        const id = params.id;
-        if (id === undefined || isNaN(id)) {
-            page.redirect("/")
-        }
-        const response = await fetch(`http://localhost:3000/books/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        });
-        if (response.ok) {
-            const data = await response.json();
-            newBid = parseInt(data.price) + 1;
-            return data;
-        } else {
-            throw new Error("Item not found");
-        }
+        const tempItem = await getAuctionItemById(params.id);
+        newBid = tempItem.price + 1;
+        return tempItem;
     }
-
-    let item = getItem();
-
-    $: isBidder = hasBidderRole(user);
 
     const sendNewBid = async () => {
         notice = false;
         noticeMessage = "";
-        const id = params.id;
-        if (id === undefined || isNaN(id)) {
-            page.redirect("/")
-        }
-        const response = await fetch(`http://localhost:3000/books/${id}/bids`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + user.token
-            },
-            body: JSON.stringify({price: newBid})
-        });
-        if (response.ok) {
-            item = await getItem();
-            return await response.json();
-        } else {
+        try {
+            item = await placeBid(params.id, user, newBid);
+        } catch (e) {
             notice = true;
-            console.log(response)
-            let data = await response.json();
-            noticeMessage = data.message;
+            noticeMessage = e.message;
         }
     }
 
-    $: getTime = (endDate) => {
-        const diff = endDate - currentDateTime.getTime();
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-        if (diff < 0 || isNaN(diff)) {
-            auctionEnded = true;
-            return "Auction ended!";
-        }
-        if (days > 0) {
-            return days + " day(s) " + hours + " hour(s)";
-        } else if (hours > 0) {
-            return hours + " hour(s) " + minutes + " minute(s)";
-        } else {
-            return minutes + " minute(s) " + seconds + " second(s)";
-        }
-        return (minutes - hours * 60) + " minute(s) " + (seconds - minutes * 60) + " second(s)";
-    }
-
-
+    let item = getItem();
+    $: isBidder = hasBidderRole(user);
+    $: getTime = (endDate) => getFormattedTimeBetween(currentDateTime, endDate);
 </script>
 <main>
     {#await item}
@@ -153,6 +101,7 @@
 
         </aside>
     {:catch e}
+        <p>{e}</p>
         <a href="/">
             <p>Item not found!</p>
             <p>Please go back to the homepage</p>

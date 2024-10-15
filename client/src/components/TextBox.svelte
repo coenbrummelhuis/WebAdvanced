@@ -6,12 +6,12 @@
 
     const type = (inputType === "text" || inputType === "number" || inputType === "email" || inputType === "password") ? inputType : "text";
 
-    const keyUpEvent = (event) => {
+    const onInteraction = (event) => {
         onKeyUp(event);
     }
 </script>
 <div>
-    <input on:keyup={keyUpEvent} on:change={keyUpEvent} bind:value={value} {...{type}} placeholder="{valueType}...">
+    <input on:keyup={onInteraction} on:change={onInteraction} bind:value={value} {...{type}} placeholder="{valueType}...">
 </div>
 
 
