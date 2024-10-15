@@ -24,12 +24,12 @@ Authorization: Bearer {{token}}
 {
   "title": "test",
   "description": "test",
-  "launchDate": "24-12-2024",
+  "launchDate": "2024-12-24",
   "language": "English",
   "author": "J.K. Rowling",
   "price": 2,
   "bidders": [],
-  "auction-date": "15-10-2024",
+  "auction-date": "2024-10-15",
   "img": ["https://images.penguinrandomhouse.com/cover/9780593124611"]
 }
 

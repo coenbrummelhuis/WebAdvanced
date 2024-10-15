@@ -22,7 +22,7 @@
             {#if (item.img.length !== 0)}
                 <picture><img width="150rem" src={item.img[0]} alt="First book cover"></picture>
             {:else }
-                <picture><img width="150rem" src="https://via.placeholder.com/200" alt="Placeholder"></picture>
+                <picture><img width="150rem" src="https://dummyimage.com/200x300/" alt="Placeholder"></picture>
             {/if}
             <h1>{item.title}</h1>
             <h3>{getTime(item["auction-date"])}</h3>

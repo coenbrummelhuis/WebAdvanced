@@ -5,7 +5,7 @@ export default [{
     "launchDate": new Date("2000-02-26"),
     "language": "English",
     "author": "J.K. Rowling",
-    "img": ["https://i.pinimg.com/736x/a0/69/7a/a0697af2de64d67cf6dbb2a13dbc0457.jpg", "https://via.placeholder.com/200", "https://media.s-bol.com/jnVq9YPlpV4W/546x840.jpg"],
+    "img": ["https://i.pinimg.com/736x/a0/69/7a/a0697af2de64d67cf6dbb2a13dbc0457.jpg", "https://dummyimage.com/200x300/", "https://media.s-bol.com/jnVq9YPlpV4W/546x840.jpg"],
 
     "price": 10,
     "bidders": [],
@@ -17,7 +17,7 @@ export default [{
     "launchDate": new Date("1997-06-02"),
     "language": "English",
     "author": "J.K. Rowling",
-    "img": ["https://via.placeholder.com/200"],
+    "img": ["https://dummyimage.com/200x300/"],
 
     "price": 9,
     "bidders": [],
@@ -29,7 +29,7 @@ export default [{
     "launchDate": new Date("1998-06-02"),
     "language": "English",
     "author": "J.K. Rowling",
-    "img": ["https://via.placeholder.com/200"],
+    "img": ["https://dummyimage.com/200x300/"],
 
     "price": 4,
     "bidders": [],
@@ -41,7 +41,7 @@ export default [{
     "launchDate": new Date("1998-06-02"),
     "language": "English",
     "author": "J.K. Rowling",
-    "img": ["https://via.placeholder.com/200"],
+    "img": ["https://dummyimage.com/200x300/"],
 
     "price": 4,
     "bidders": [{
@@ -56,7 +56,7 @@ export default [{
     "launchDate": new Date("1998-06-02"),
     "language": "Nederlands",
     "author": "J.K. Rowling",
-    "img": ["https://via.placeholder.com/200"],
+    "img": ["https://dummyimage.com/200x300/"],
 
     "price": 4,
     "bidders": [],

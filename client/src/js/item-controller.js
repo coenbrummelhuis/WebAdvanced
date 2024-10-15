@@ -1,5 +1,25 @@
 import page from "page";
 
+export async function addNewAuctionItem(item, user) {
+    await checkItemValidity(item);
+    const response = await fetch("http://localhost:3000/books", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + user.token
+        },
+        body: JSON.stringify(item)
+    });
+    const data = await response.json();
+    const status = response.status;
+    if (status !== 201) {
+        throw new Error(data.message);
+    } else {
+        return data;
+    }
+}
+
 export async function getAllAuctionItems() {
         const response = await fetch("http://localhost:3000/books", {
             method: 'GET',
@@ -130,6 +150,55 @@ function getTimeBetweenDates(dateFrom, dateTo) {
     return {days, hours, minutes, seconds};
 }
 
+async function checkItemValidity(item) {
+    if (item.title === undefined || item.title === "") {
+        throw new Error("Title is required");
+    }
+    if (item.description === undefined || item.description === "") {
+        throw new Error("Description is required");
+    }
+    if (item.price === undefined || item.price === "") {
+        throw new Error("Price is required");
+    }
+    if (isNaN(parseInt(item.price))) {
+        throw new Error("Price is not a number");
+    }
+    item.price = parseInt(item.price);
+    if (parseInt(item.price) !== parseFloat(item.price)) {
+        throw new Error("Price is not a whole number");
+    }
+    if (parseInt(item.price) < 0) {
+        throw new Error("Price can't be negative");
+    }
+    if (item.launchDate === undefined || item.launchDate === "") {
+        throw new Error("Launch date is required");
+    }
+    if (Date.parse(item.launchDate) === undefined || isNaN(Date.parse(item.launchDate))) {
+        throw new Error("Launch date is in incorrect format (YYYY-MM-DD)");
+    }
+    if (item.language === undefined || item.language === "") {
+        throw new Error("Language is required");
+    }
+    if (item.author === undefined || item.author === "") {
+        throw new Error("Author is required");
+    }
+    if (item.img === undefined || item.img === "") {
+        throw new Error("Image is required");
+    }
+
+    const resp = await fetch(item.img[0], { method: 'HEAD' });
+    if(resp.status !== 200) {
+        item.img[0] = "https://dummyimage.com/200x300/";
+    }
+
+    if (item["auction-date"] === undefined || item["auction-date"] === "") {
+        throw new Error("Auction date is required");
+    }
+    if (Date.parse(item["auction-date"]) === undefined || isNaN(Date.parse(item["auction-date"]))) {
+        throw new Error("Auction date is in incorrect format (YYYY-MM-DD)");
+    }
+
+}
 
 function getAllBids(user, bids) {
     const allBids = [];
