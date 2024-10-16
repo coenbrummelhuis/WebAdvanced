@@ -6,7 +6,7 @@
     import Login from "./pages/Login.svelte";
     import Register from "./pages/Register.svelte";
     import PageNotFound from "./pages/PageNotFound.svelte";
-    import Items from "./pages/Item.svelte";
+    import Items from "./pages/SpecificItem.svelte";
     import Account from "./pages/Account.svelte";
     import AddItem from "./pages/AddItem.svelte";
     import EditItem from "./pages/EditItem.svelte";

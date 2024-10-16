@@ -4,6 +4,10 @@ import defaultBook from "../models/default-book.js";
 import {getUserById} from "./user-controller.js";
 
 let books = defaultBooks;
+let tempChannel = {
+    stream: null
+}
+const channels = new Map();
 
 
 /**
@@ -91,6 +95,12 @@ export function bidBook(req, res) {
     }];
     book.price = price;
     const sendBook = Object.assign({}, book);
+
+    const message = {
+        bidders: sendBook.bidders,
+        price: sendBook.price
+    }
+    distributeMessage(book.id, message)
     res.status(httpStatusCodes.OK).json(sendBook);
 }
 
@@ -177,7 +187,58 @@ export function getBookById(req, res) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
         return;
     }
+    const monitorId = crypto.randomUUID();
+    book.monitorID = monitorId;
+    channels.set(monitorId, {bookId: id});
     res.status(httpStatusCodes.OK).json(book);
+}
+
+/**
+ * CRUD: READ
+ *
+ * Monitors the book by id
+ * @param req The request of the server
+ * @param res The response to the client
+ */
+export function monitorBookById(req, res) {
+    const id = req.params.id || undefined;
+    if (id === undefined) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID can't be null!"});
+        return;
+    }
+    if (isNaN(parseInt(id))) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "ID is not a number!"});
+        return;
+    }
+    const monitorId = req.params.monitorId || undefined;
+    if (monitorId === undefined) {
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Monitor ID can't be null!"});
+        return;
+    }
+    if (channels.get(monitorId) === undefined) {
+        res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no monitor with that id!"});
+        return;
+    }
+    let channel = channels.get(monitorId);
+    if (channel.stream) {
+        res.status(httpStatusCodes.CONFLICT).json({message: "There is already a monitor with that id!"});
+        return;
+    }
+
+    res.setHeader("Cache-Control", "no-cache")
+    res.setHeader("Content-Type", "text/event-stream")
+    res.setHeader("Access-Control-Allow-Origin", "*") // CORS support
+    res.setHeader("Connection", "keep-alive")
+    // flushing causes the headers of the response to be communicated back to the client
+    // from this point on, the client can receive pushed data
+    res.flushHeaders()
+
+    channel.stream = res;
+    tempChannel.stream = res;
+
+    res.on("close", () => {
+        channels.delete(monitorId);
+    });
 }
 
 /**
@@ -290,6 +351,18 @@ function checkBook(book) {
     return newBook;
 }
 
+function distributeMessage(id, message) {
+    for (const [channelId, {stream, bookId}] of channels) {
+        if (stream) {
+            if (parseInt(id) !== parseInt(bookId)) {
+            }else {
+                console.log("Send new message to " + channelId + "\n" + JSON.stringify(message));
+                stream.write(`data: ${JSON.stringify(message)}\n\n`);
+            }
+        }
+    }
+}
+
 function hasCorrectDate(date) {
     let newDate = Date.parse(date);
     if (newDate === undefined || isNaN(newDate)) {
@@ -302,9 +375,6 @@ function checkBookAttributes(book) {
     const newResource = Object.assign({}, defaultBook);
     const resource = book;
     for (const attribute in newResource) {
-        console.log(typeof newResource[attribute]);
-        console.log(typeof  resource[attribute]);
-
         if (resource[attribute] === undefined) {
             throw new Error(`This book doesn't have an ${attribute}!`);
         } else if (typeof newResource[attribute] !== typeof resource[attribute]) {

@@ -1,5 +1,13 @@
 import express from "express";
-import {addBook, bidBook, deleteBook, getBookById, getBooks, updateBook} from "../controllers/book-controller.js";
+import {
+    addBook,
+    bidBook,
+    deleteBook,
+    getBookById,
+    getBooks,
+    monitorBookById,
+    updateBook
+} from "../controllers/book-controller.js";
 import isLoggedIn from "../middleware/is-logged-in.js";
 import isAdmin from "../middleware/is-admin.js";
 import checkContentTypeHeader from "../middleware/check-content-type-header.js";
@@ -27,6 +35,10 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     getBookById(req, res);
+});
+
+router.get('/:id/monitor/:monitorId', (req, res) => {
+   monitorBookById(req, res);
 });
 
 /**
