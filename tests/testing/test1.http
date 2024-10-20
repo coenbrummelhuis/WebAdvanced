@@ -1,0 +1,100 @@
+### Retrieve a token that can be used for calls requiring authentication
+POST {{protocol}}{{host}}:{{port}}/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin@admin.com",
+  "password": "AdminWW123"
+}
+
+> {%
+    client.global.set("token", response.body.token);
+%}
+
+### GET request to backend to get all auctionable products
+GET {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "Got all products succesfully", function () {
+            client.assert(response.status === 200, "Response status is not 200");
+            client.global.set("numberOfElements", response.body.length);
+        }
+    )
+%}
+
+### POST request to backend to add 1 new item
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "2024-12-24",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": 2,
+  "bidders": [],
+  "auction-date": "2024-10-15",
+  "img": [
+    "https://images.penguinrandomhouse.com/cover/9780593124611"
+  ]
+}
+
+> {%
+    client.test(
+        "Added an element succesfully",
+        function () {
+            client.assert(response.status === 201, "Response status is not 200");
+
+        }
+    )
+%}
+
+### GET request to backend to confirm get all elements works after adding
+GET {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "Got all products succesfully", function () {
+            client.assert(response.status === 200, "Response status is not 200");
+            client.assert(response.body.length === client.global.get("numberOfElements") + 1);
+        }
+    )
+%}
+
+### DELETE request to backend to remove 1 item
+DELETE {{protocol}}{{host}}:{{port}}/books/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+> {%
+    client.test(
+        "Removed one product succesfully", function () {
+            client.assert(response.status === 200, "Response status is not 200");
+        }
+    )
+%}
+
+### GET request to backend to confirm get all elements works after deletion
+GET {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "Got all products succesfully", function () {
+            client.assert(response.status === 200, "Response status is not 200");
+            client.assert(response.body.length === client.global.get("numberOfElements"));
+            client.assert(response.body[0].hasOwnProperty() === true)
+        }
+    )
+%}

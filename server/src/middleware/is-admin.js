@@ -8,6 +8,6 @@ export default function (req, res, next) {
     if (user["roles"].includes("admin")) {
         next();
     }else {
-        res.status(httpStatusCodes.FORBIDDEN).json({message: "You are not authorized!"})
+        res.status(httpStatusCodes.FORBIDDEN).json({message: "You are not authorized!"});
     }
 }

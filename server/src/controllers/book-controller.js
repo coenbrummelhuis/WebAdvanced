@@ -4,9 +4,9 @@ import defaultBook from "../models/default-book.js";
 import {getUserById} from "./user-controller.js";
 
 let books = defaultBooks;
-let tempChannel = {
+const tempChannel = {
     stream: null
-}
+};
 const channels = new Map();
 
 
@@ -64,7 +64,7 @@ export function bidBook(req, res) {
     }
     if (parseInt(price) !== parseFloat(price)) {
         res.status(httpStatusCodes.BAD_REQUEST).json({message: "Price can't have decimals!"});
-        return
+        return;
     }
 
 
@@ -72,7 +72,7 @@ export function bidBook(req, res) {
         res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({message: "Something went wrong with your account!"});
     }
 
-    let book = books.find(b => b["id"] === parseInt(id)) || null;
+    const book = books.find(b => b["id"] === parseInt(id)) || null;
     if (book === null) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
         return;
@@ -99,8 +99,8 @@ export function bidBook(req, res) {
     const message = {
         bidders: sendBook.bidders,
         price: sendBook.price
-    }
-    distributeMessage(book.id, message)
+    };
+    distributeMessage(book.id, message);
     res.status(httpStatusCodes.OK).json(sendBook);
 }
 
@@ -219,19 +219,19 @@ export function monitorBookById(req, res) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no monitor with that id!"});
         return;
     }
-    let channel = channels.get(monitorId);
+    const channel = channels.get(monitorId);
     if (channel.stream) {
         res.status(httpStatusCodes.CONFLICT).json({message: "There is already a monitor with that id!"});
         return;
     }
 
-    res.setHeader("Cache-Control", "no-cache")
-    res.setHeader("Content-Type", "text/event-stream")
-    res.setHeader("Access-Control-Allow-Origin", "*") // CORS support
-    res.setHeader("Connection", "keep-alive")
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Connection", "keep-alive");
     // flushing causes the headers of the response to be communicated back to the client
     // from this point on, the client can receive pushed data
-    res.flushHeaders()
+    res.flushHeaders();
 
     channel.stream = res;
     tempChannel.stream = res;
@@ -250,17 +250,17 @@ export function monitorBookById(req, res) {
  */
 export function getBidsByUser(req, res) {
     const id = parseInt(req.params.id);
-    const userId = req.user.id
+    const userId = req.user.id;
     if (id === undefined || userId === undefined) {
-        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Please add an id to the request!"})
+        res.status(httpStatusCodes.BAD_REQUEST).json({message: "Please add an id to the request!"});
         return;
     }
     if (id !== userId) {
         res.status(httpStatusCodes.FORBIDDEN).json({message: "You are not authorized to view another persons bids!"});
         return;
     }
-    let bids = [];
-    for (let book of books) {
+    const bids = [];
+    for (const book of books) {
         if (book.bidders !== undefined) {
             book.bidders.forEach(b => {
                 if (b.bidder === getUserById(id).username) {
@@ -300,7 +300,7 @@ export function updateBook(req, res) {
         return;
     }
 
-    let oldBook = books.findIndex(b => b["id"] === parseInt(id));
+    const oldBook = books.findIndex(b => b["id"] === parseInt(id));
     if (oldBook === null) {
         res.status(httpStatusCodes.NOT_FOUND).json({message: "There is no book with that id!"});
         return;
@@ -331,7 +331,6 @@ export function deleteBook(req, res) {
 // Helper methods
 
 function checkBook(book) {
-    let newBook;
     if (!hasCorrectDate(book["launchDate"])) {
         throw new Error("Launch date is in incorrect format!");
     }
@@ -340,11 +339,7 @@ function checkBook(book) {
         throw new Error("Auction date is in incorrect format!");
     }
     book["auction-date"] = new Date(book["auction-date"]);
-    try {
-        newBook = checkBookAttributes(book);
-    } catch (e) {
-        throw e;
-    }
+    const newBook = checkBookAttributes(book);
     if (isNaN(book["price"])) {
         throw new Error("Price is not a number!");
     }
@@ -354,8 +349,7 @@ function checkBook(book) {
 function distributeMessage(id, message) {
     for (const [channelId, {stream, bookId}] of channels) {
         if (stream) {
-            if (parseInt(id) !== parseInt(bookId)) {
-            }else {
+            if (parseInt(id) === parseInt(bookId)) {
                 console.log("Send new message to " + channelId + "\n" + JSON.stringify(message));
                 stream.write(`data: ${JSON.stringify(message)}\n\n`);
             }
@@ -364,7 +358,7 @@ function distributeMessage(id, message) {
 }
 
 function hasCorrectDate(date) {
-    let newDate = Date.parse(date);
+    const newDate = Date.parse(date);
     if (newDate === undefined || isNaN(newDate)) {
         return false;
     }

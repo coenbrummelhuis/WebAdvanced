@@ -1,0 +1,33 @@
+### GET request to backend to check for title
+GET {{protocol}}{{host}}:{{port}}/books?title=Test
+Content-Type: application/json
+Accept: application/json
+
+> {%
+client.test(
+    "It is possible to search the list of auctions on a title or name", function () {
+        for (const bodyKey in response.body) {
+            console.log("Checked \"" + response.body[bodyKey].title + "\" for title: test");
+            client.assert(response.body[bodyKey].title.includes("test") === true, "Title doesn't include test");
+        }
+
+    }
+)
+%}
+
+### GET request to backend to check for title
+GET {{protocol}}{{host}}:{{port}}/books?title=Nederland
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "It is possible to search the list of auctions on a title or name", function () {
+            for (const bodyKey in response.body) {
+                console.log("Checked \"" + response.body[bodyKey].title + "\" for title: test");
+                client.assert(response.body[bodyKey].title.includes("Nederland") === true, "Title doesn't include test");
+            }
+
+        }
+    )
+%}

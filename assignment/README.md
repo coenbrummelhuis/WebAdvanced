@@ -51,9 +51,9 @@ in the [user file](../documentation/users.md)
 
 ## Testing
 
-The backend of your application needs to be tested. For this we will use the REST client in IntelliJ which can be used to write out and test REST calls. As an example we created a [file](../tests/rest/auth.http) to test the authentication flow. Feel free to take a look. An in depth description of how this works can be found [here](../tests/rest/README.md). This testing resembles testing you might have done earlier using Postman. A benefit for using these files is that you can create one for each resource you need. This file can then be committed to version control andother developers will have up-to-date documentation and tests available to continue working.
+The backend of your application needs to be tested. For this we will use the REST client in IntelliJ which can be used to write out and test REST calls. As an example we created a [file](../tests/selfTesting/auth.http) to test the authentication flow. Feel free to take a look. An in depth description of how this works can be found [here](../tests/selfTesting/README.md). This testing resembles testing you might have done earlier using Postman. A benefit for using these files is that you can create one for each resource you need. This file can then be committed to version control andother developers will have up-to-date documentation and tests available to continue working.
 
-You should place your rest file in [`/tests/rest`](../tests/rest).
+You should place your selfTesting file in [`/tests/selfTesting`](../tests/selfTesting).
 
 [back to top](./README.md#contents)
 

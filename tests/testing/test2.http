@@ -1,0 +1,17 @@
+### GET request to backend to get all auctionable products
+GET {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test(
+        "The first product has all explicitly needed attributes", function () {
+            client.assert(response.status === 200, "Response status is not 200");
+            client.assert(response.body.length > 0, "Response body doesn't contain any products");
+            client.assert(response.body[0].hasOwnProperty("title") === true, "Response product does not contain title!");
+            client.assert(response.body[0].hasOwnProperty("price") === true, "Response product does not contain price!");
+            client.assert(response.body[0].hasOwnProperty("bidders") === true, "Response product does not contain bidders!");
+            client.assert(response.body[0].hasOwnProperty("auction-date") === true, "Response product does not contain auction date");
+        }
+    )
+%}

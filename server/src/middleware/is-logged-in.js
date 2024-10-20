@@ -2,12 +2,12 @@ import jwt from "jsonwebtoken";
 import httpStatusCodes from "http-status-codes";
 import {getUserById} from "../controllers/user-controller.js";
 export default function (req, res, next) {
-    let header = req.header('Authorization') || undefined;
+    const header = req.header('Authorization') || undefined;
     if (header === undefined) {
         res.status(httpStatusCodes.UNAUTHORIZED).json({message: "No authorization header has been supplied!"});
         return;
     }
-    let token = header.split(" ")[1] || undefined;
+    const token = header.split(" ")[1] || undefined;
     if(token === undefined) {
         res.status(httpStatusCodes.UNAUTHORIZED).json({message: "No authorization header has been supplied!"});
         return;
@@ -15,12 +15,12 @@ export default function (req, res, next) {
     try {
         const decode = jwt.decode(token, { complete: true }) || undefined;
         if (decode === undefined) {
-            res.status(httpStatusCodes.UNAUTHORIZED).json({message: "You are not authorized"})
+            res.status(httpStatusCodes.UNAUTHORIZED).json({message: "You are not authorized"});
             return;
         }
         const payload = decode.payload;
         if (payload === undefined) {
-            res.status(httpStatusCodes.UNAUTHORIZED).json({message: "You are not authorized"})
+            res.status(httpStatusCodes.UNAUTHORIZED).json({message: "You are not authorized"});
             return;
         }
         const user = getUserById(payload["userId"]);

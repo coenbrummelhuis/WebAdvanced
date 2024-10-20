@@ -10,7 +10,6 @@
     import Account from "./pages/Account.svelte";
     import AddItem from "./pages/AddItem.svelte";
     import EditItem from "./pages/EditItem.svelte";
-
     let page;
     let params;
     let currentRoute;

@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/auth", auth);
-app.use("/users", users)
+app.use("/users", users);
 app.use('/books', books);
 
 app.use((err, req, res, next) => {

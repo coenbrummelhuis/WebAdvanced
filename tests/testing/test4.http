@@ -1,0 +1,32 @@
+### GET Check if input is validated server side
+### POST request to backend to add 1 new item
+POST {{protocol}}{{host}}:{{port}}/books
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "test",
+  "description": "test",
+  "launchDate": "2024-12-24",
+  "language": "English",
+  "author": "J.K. Rowling",
+  "price": "wow",
+  "bidders": [],
+  "auction-date": "2024-10-15",
+  "img": [
+    "https://images.penguinrandomhouse.com/cover/9780593124611"
+  ]
+}
+
+> {%
+    client.test(
+        "Tested validation on the server side",
+        function () {
+            client.assert(response.status === 400, "Response status is not 400");
+            client.assert(response.body.message === "The price of this book is of the wrong type!");
+        }
+    )
+%}
+
+###

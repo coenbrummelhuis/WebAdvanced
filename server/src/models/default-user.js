@@ -4,4 +4,4 @@ export default {
     "password": "randomshit",
     "secret": "",
     "roles": []
-}
+};

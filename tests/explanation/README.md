@@ -36,8 +36,8 @@ chapters explain this in greater detail.
 
 ## Using the REST client
 
-To create new calls a new `.rest` or `.http` file has to e created. Which file extension you pick is not important. 
-IntelliJ treats them the same. We will be storing them in `/tests/rest`. Each file can contain multiple requests. Each 
+To create new calls a new `.selfTesting` or `.http` file has to e created. Which file extension you pick is not important. 
+IntelliJ treats them the same. We will be storing them in `/tests/selfTesting`. Each file can contain multiple requests. Each 
 request should be separated by `###`. This also functions as a comment so you can add additional documentation to a 
 request.
 

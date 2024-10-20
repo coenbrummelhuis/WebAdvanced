@@ -10,4 +10,4 @@ export default [{
     "password": "$2b$10$JZo1qeFUe4HkqhhXqHuZSuJPwtelNXXuXrJiMq4loclmiGsaupdL6",
     "secret": "c52f46de-6d2c-425c-a65a-6ba7212b9e57",
     "roles": ["bidder", "admin"]
-}]
+}];

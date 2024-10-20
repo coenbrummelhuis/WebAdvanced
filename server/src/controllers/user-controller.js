@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import httpStatusCodes from "http-status-codes";
-import defaultUsers from "../resources/users.js"
+import defaultUsers from "../resources/users.js";
 
 let users = defaultUsers;
 const saltRounds = 10;
@@ -47,7 +47,7 @@ export async function loginUser(req, res) {
     res.status(httpStatusCodes.OK).json({token: token});
 }
 
-export async function logoutUser(req, res) {
+export function logoutUser(req, res) {
     const user = req.user;
     revokeSecret(user);
     res.status(httpStatusCodes.NO_CONTENT).send();
@@ -62,7 +62,7 @@ async function addUser(username, password) {
         "password": hash,
         "secret": crypto.randomUUID(),
         "roles": ["bidder"]
-    }
+    };
     users = [...users, user];
     return user;
 }
@@ -86,7 +86,7 @@ function revokeSecret(user) {
 }
 
 function validEmail(email) {
-    if (email == null) {
+    if (email === null) {
         throw new Error("Email can't be empty!");
     }
     if (!email.includes("@")) {
@@ -102,7 +102,7 @@ function validEmail(email) {
 
 function validPassword(password) {
     if (password === null) {
-        throw new Error("Password can't be empty!")
+        throw new Error("Password can't be empty!");
     }
     if (password.length < 8) {
         throw new Error("Password should have a length of at least 8");

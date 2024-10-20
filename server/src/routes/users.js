@@ -9,7 +9,7 @@ router.post('/', checkContentTypeHeader, async (req, res) => {
     await createUser(req, res);
 });
 
-router.get('/:id/bids', isLoggedIn, async (req, res) => {
+router.get('/:id/bids', isLoggedIn, (req, res) => {
     getBidsByUser(req, res);
-})
+});
 export default router;
